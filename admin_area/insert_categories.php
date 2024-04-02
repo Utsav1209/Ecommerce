@@ -1,5 +1,13 @@
 <?php
 include("../includes/connect.php");
+
+if (!isset($_SESSION['username'])) {
+
+    header("Location: admin_login.php");
+    exit;
+}
+
+
 if (isset($_POST["insert_cat"])) {
     $category_title = $_POST['cat_title'];
 

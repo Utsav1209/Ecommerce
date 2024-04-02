@@ -1,5 +1,12 @@
 <?php
 
+session_start();
+if (!isset($_SESSION['username'])) {
+
+    header("Location: admin_login.php");
+    exit;
+}
+
 include("../includes/connect.php");
 if (isset($_POST['insert_product'])) {
     $product_title = $_POST['product_title'];

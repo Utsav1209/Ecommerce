@@ -1,4 +1,10 @@
 <?php
+
+if (!isset($_SESSION['username'])) {
+
+    header("Location: admin_login.php");
+    exit;
+}
 if (isset($_GET['edit_category'])) {
     $edit_category = $_GET['edit_category'];
     // echo $edit_category;
