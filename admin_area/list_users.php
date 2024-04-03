@@ -38,7 +38,7 @@
                 <td><img src='../users_area/user_images/$user_image' alt='$username' class='product_img'></td>
                 <td>$user_address</td>
                 <td>$user_mobile</td>
-                <td><a href='index.php?delete_user=$user_id'><i class='fa-solid fa-trash'></i></a></td>
+                <td><a href='#' onclick='confirmDelete($user_id)'><i class='fa-solid fa-trash'></i></a></td>
           
             </tr>";
             }
@@ -49,3 +49,11 @@
 
         </tbody>
 </table>
+
+<script>
+    function confirmDelete(userId) {
+        if (confirm("Are you sure you want to delete this user?")) {
+            window.location.href = 'index.php?delete_user=' + userId;
+        }
+    }
+</script>

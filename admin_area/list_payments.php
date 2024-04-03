@@ -36,7 +36,8 @@
                 <td>$amount</td>
                 <td>$payment_mode</td>
                 <td>$date</td>
-                <td><a href='index.php?delete_payment=$payment_id'><i class='fa-solid fa-trash'></i></a></td>
+
+                <td><a href='#' onclick='confirmDelete($payment_id)'><i class='fa-solid fa-trash'></i></a></td>
                 </tr>";
             }
         ?>
@@ -49,3 +50,11 @@
 
         </tbody>
 </table>
+
+<script>
+    function confirmDelete(paymentId) {
+        if (confirm("Are you sure you want to delete this payment?")) {
+            window.location.href = 'index.php?delete_payment=' + paymentId;
+        }
+    }
+</script>

@@ -22,27 +22,33 @@ include("../functions/common_function.php");
                     <!-- username -->
                     <div class="form-outline mb-4">
                         <label for="user_username" class="form-label">Username</label>
-                        <input type="text" name="user_username" id="user_username" class="form-control" placeholder="Enter Your Username" autocomplete="off" required="required">
+                        <input type="text" name="user_username" id="user_username" class="form-control" placeholder="Enter Your Username" autocomplete="off" required minlength="5" maxlength="20">
+                        <small class="form-text text-muted">Username must be between 5 and 20 characters long.</small>
                     </div>
                     <!-- email -->
                     <div class="form-outline mb-4">
                         <label for="user_email" class="form-label">Email</label>
-                        <input type="text" name="user_email" id="user_email" class="form-control" placeholder="Enter Your Email" autocomplete="off" required="required">
+                        <input type="email" name="user_email" id="user_email" class="form-control" placeholder="Enter Your Email" autocomplete="off" required>
+                        <small id="email_error" class="text-danger"></small>
                     </div>
                     <!-- image -->
                     <div class="form-outline mb-4">
                         <label for="user_image" class="form-label">User Image</label>
-                        <input type="file" name="user_image" id="user_image" class="form-control" required="required">
+                        <input type="file" name="user_image" id="user_image" class="form-control" required accept="image/jpeg, image/png">
+                        <small id="image_error" class="text-danger"></small>
                     </div>
                     <!-- password -->
                     <div class="form-outline mb-4">
                         <label for="user_password" class="form-label">Password</label>
-                        <input type="password" name="user_password" id="user_password" class="form-control" placeholder="Enter Your Password" autocomplete="off" required="required">
+                        <input type="password" name="user_password" id="user_password" class="form-control" placeholder="Enter Your Password" autocomplete="off" required minlength="8" maxlength="20" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,20}$">
+                        <small id="password_error" class="text-danger"></small>
+                        <small class="form-text text-muted">Password must be between 8 and 20 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character from [!@#$%^&*].</small>
                     </div>
                     <!-- confirm password -->
                     <div class="form-outline mb-4">
                         <label for="conf_user_password" class="form-label">Confirm Password</label>
-                        <input type="password" name="conf_user_password" id="conf_user_password" class="form-control" placeholder="Confirm Password" autocomplete="off" required="required">
+                        <input type="password" name="conf_user_password" id="conf_user_password" class="form-control" placeholder="Confirm Password" autocomplete="off" required minlength="8" maxlength="20" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,20}$">
+                        <small id="conf_password_error" class="text-danger"></small>
                     </div>
                     <!-- address -->
                     <div class="form-outline mb-4">
@@ -52,8 +58,11 @@ include("../functions/common_function.php");
                     <!-- contact -->
                     <div class="form-outline mb-4">
                         <label for="user_contact" class="form-label">Contact</label>
-                        <input type="text" name="user_contact" id="user_contact" class="form-control" placeholder="Enter Your Contact Number" autocomplete="off" required="required">
+                        <input type="tel" name="user_contact" id="user_contact" class="form-control" placeholder="Enter Your Contact Number" autocomplete="off" required pattern="[0-9]{10}">
+                        <small id="contact_error" class="text-danger"></small>
+                        <small class="form-text text-muted">Contact number must contain exactly 10 digits.</small>
                     </div>
+
                     <div class="mt-4 pt-2">
                         <input type="submit" value="Register" class="bg-info py-2 px-3 border-0" name="user_register">
                         <p class="small fw-bold mt-2 pt-1 mb-0">Already have an account? <a href="user_login.php" class="text-danger text-decoration-none">Login</a></p>
@@ -96,7 +105,9 @@ if (isset($_POST["user_register"])) {
         $insert_query = "INSERT INTO `user_table` (username,user_email,user_password,user_image,user_ip,user_address,user_mobile) VALUES
         ('$user_username','$user_email','$hash_password','$user_image','$user_ip','$user_address','$user_contact')";
         $sql_execute = mysqli_query($con, $insert_query);
+        echo "<script>alert('Registered Successfully')</script>";
     }
+
 
     //selecting cart items
     $select_cart_items = "SELECT * FROM `cart_details` WHERE ip_address='$user_ip'";

@@ -42,9 +42,6 @@ session_start();
                             <a class="nav-link" href="./users_area/user_registration.php">Register</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Contact</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" href="cart.php"><i class="fa-solid fa-cart-shopping"></i><sup><?php cart_item(); ?></sup></a>
                         </li>
                         <li class="nav-item">
@@ -96,17 +93,22 @@ session_start();
         </div>
         <!-- Fourth child -->
         <div class="row">
+
             <div class="col-md-10">
+
                 <!-- Products -->
                 <div class="row px-1">
+
                     <!-- fetching products -->
                     <?php
                     search_product();
                     get_unique_categories();
                     get_unique_brands();
                     ?>
+
                     <!-- row end -->
                 </div>
+
                 <!-- column end -->
             </div>
             <div class="col-md-2 bg-secondary p-0">

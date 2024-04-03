@@ -217,7 +217,8 @@ function search_product()
                 <p class='card-text'>$product_description</p>
                 <p class='card-title'>Price: $product_price/-</p>
                 <a href='index.php?add_to_cart=$product_id' class='btn btn-info'>Add to Cart</a>
-                <a href='product_details.php?product_id=$product_id' class='btn btn-secondary'>View more</a>
+                <a href='product_details.php?product_id=$product_id' class='btn btn-success'>View more</a>
+                <a href='index.php' class='btn btn-secondary'>Go Home</a>
             </div>
         </div>
     </div>";
@@ -257,7 +258,7 @@ function view_details()
                 <p class='card-text'>$product_description</p>
                 <p class='card-title'>Price: $product_price/-</p>
                 <a href='index.php?add_to_cart=$product_id' class='btn btn-info'>Add to Cart</a>
-                <a href='index.php' class='btn btn-secondary'>Go home</a>
+                <a href='index.php' class='btn btn-secondary'>Go Home</a>
             </div>
         </div>
     </div>
@@ -382,10 +383,10 @@ function get_user_order_details()
                     $row_count = mysqli_num_rows($result_order_query);
                     if ($row_count > 0) {
                         echo "<h3 class='text-center text-success mt-5 mb-2'>You have <span class='text-danger'>$row_count</span> pending orders</h3>
-                        <p class='text-center'><a href='profile php?my_orders' class='text-dark'>Order details</a></p>";
+                        <p class='text-center'><a href='profile.php?my_orders' class='text-dark'>Order details</a></p>";
                     } else {
                         echo "<h3 class='text-center text-success mt-5 mb-2'>You have Zero pending orders</h3>
-                        <p class='text-center'><a href='profile php?my_orders' class='text-dark'>Explore Products</a></p>";
+                        <p class='text-center'><a href='../index.php' class='text-dark'>Explore Products</a></p>";
                     }
                 }
             }

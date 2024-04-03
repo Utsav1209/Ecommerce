@@ -38,14 +38,18 @@
                     ?></td>
                 <td><?php echo $status; ?></td>
                 <td><a href='index.php?edit_products=<?php echo $product_id; ?>'><i class='fa-solid fa-pen-to-square'></i></a></td>
-                <td><a href='index.php?delete_products=<?php echo $product_id; ?>'><i class='fa-solid fa-trash'></i></a></td>
+                <td><a href='#' onclick='confirmDelete(<?php echo $product_id; ?>)'><i class='fa-solid fa-trash'></i></a></td>
             </tr>
         <?php
         }
-
-
-
         ?>
-
     </tbody>
 </table>
+
+<script>
+    function confirmDelete(product_id) {
+        if (confirm("Are you sure you want to delete this product?")) {
+            window.location.href = 'index.php?delete_products=' + product_id;
+        }
+    }
+</script>

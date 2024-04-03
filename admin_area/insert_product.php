@@ -47,7 +47,7 @@ if (isset($_POST['insert_product'])) {
         $result_query = mysqli_query($con, $insert_products);
         if ($result_query) {
             echo "<script>alert('successfully inserted the product')</script>";
-            echo "<script>window.open('./index.php/view_products','_self')</script>";
+            echo "<script>window.open('./index.php?view_products','_self')</script>";
         }
     }
 }
@@ -78,7 +78,8 @@ if (isset($_POST['insert_product'])) {
             <!-- title -->
             <div class="form-outline mb-4 w-50 m-auto">
                 <label for="product_title" class="form-label">Product Title</label>
-                <input type="text" name="product_title" id="product_title" class="form-control" placeholder="Enter product title" autocomplete="off" required="required" />
+                <input type="text" name="product_title" id="product_title" class="form-control" placeholder="Enter product title" autocomplete="off" required="required" minlength="2" maxlength="20" />
+                <small class="form-text text-muted">Title must be between 2 and 20 characters long.</small>
             </div>
             <!-- description -->
             <div class="form-outline mb-4 w-50 m-auto">
@@ -123,22 +124,22 @@ if (isset($_POST['insert_product'])) {
             <!-- Image 1 -->
             <div class="form-outline mb-4 w-50 m-auto">
                 <label for="product_image1" class="form-label">Product Image 1</label>
-                <input type="file" name="product_image1" id="product_image1" class="form-control" required="required" />
+                <input type="file" name="product_image1" id="product_image1" class="form-control" required="required" accept="image/jpeg, image/png, image/jpg" />
             </div>
             <!-- Image 2 -->
             <div class="form-outline mb-4 w-50 m-auto">
                 <label for="product_image2" class="form-label">Product Image 2</label>
-                <input type="file" name="product_image2" id="product_image2" class="form-control" required="required" />
+                <input type="file" name="product_image2" id="product_image2" class="form-control" required="required" accept="image/jpeg, image/png, image/jpg" />
             </div>
             <!-- Image 3 -->
             <div class="form-outline mb-4 w-50 m-auto">
                 <label for="product_image3" class="form-label">Product Image 3</label>
-                <input type="file" name="product_image3" id="product_image3" class="form-control" required="required" />
+                <input type="file" name="product_image3" id="product_image3" class="form-control" required="required" accept="image/jpeg, image/png, image/jpg" />
             </div>
             <!-- Price -->
             <div class="form-outline mb-4 w-50 m-auto">
                 <label for="product_price" class="form-label">Product Price</label>
-                <input type="text" name="product_price" id="product_price" class="form-control" placeholder="Enter product price" autocomplete="off" required="required" />
+                <input type="number" name="product_price" id="product_price" class="form-control" placeholder="Enter product price" autocomplete="off" required="required" />
             </div>
             <!-- Submit -->
             <div class="form-outline mb-4 w-50 m-auto">

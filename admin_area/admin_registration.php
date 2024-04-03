@@ -34,19 +34,20 @@ include("../functions/common_function.php");
                 <form action="" method="post">
                     <div class="form-outline mb-4">
                         <label for="username" class="form-label">Username</label>
-                        <input type="text" name="username" id="username" placeholder="Enter Username" required class="form-control">
+                        <input type="text" name="username" id="username" placeholder="Enter Username" required class="form-control" minlength="5" maxlength="20">
+                        <small class="form-text text-muted">Username must be between 5 and 20 characters long.</small>
                     </div>
                     <div class="form-outline mb-4">
                         <label for="email" class="form-label">Email</label>
-                        <input type="text" name="email" id="email" placeholder="Enter Email" required class="form-control">
+                        <input type="email" name="email" id="email" placeholder="Enter Email" required class="form-control">
                     </div>
                     <div class="form-outline mb-4">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" name="password" id="password" placeholder="Enter Password" required class="form-control">
+                        <input type="password" name="password" id="password" placeholder="Enter Password" required class="form-control" minlength="8" maxlength="20" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,20}$">
                     </div>
                     <div class="form-outline mb-4">
                         <label for="confirm_password" class="form-label">Confirm Password</label>
-                        <input type="password" name="confirm_password" id="confirm_password" placeholder="Enter confirm password" required class="form-control">
+                        <input type="password" name="confirm_password" id="confirm_password" placeholder="Enter confirm password" required class="form-control" minlength="8" maxlength="20" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,20}$">
                     </div>
                     <div>
                         <input type="submit" class="bg-info py-2 px-3 border-0" name="admin_registration" value="Register">

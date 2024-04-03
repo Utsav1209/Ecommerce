@@ -26,6 +26,37 @@ session_start();
 
         }
     </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const removeCartBtns = document.querySelectorAll('.remove-cart-btn');
+            removeCartBtns.forEach(btn => {
+                btn.addEventListener('click', function(event) {
+                    // Check if at least one checkbox is checked
+                    const checkboxes = document.querySelectorAll('input[name="removeitem[]"]');
+                    let atLeastOneChecked = false;
+                    checkboxes.forEach(checkbox => {
+                        if (checkbox.checked) {
+                            atLeastOneChecked = true;
+                        }
+                    });
+
+                    // If no checkbox is checked, prevent the default action and show a message
+                    if (!atLeastOneChecked) {
+                        alert('Please select at least one item to remove from the cart.');
+                        event.preventDefault(); // Prevent the default action (form submission)
+                    } else {
+                        // Otherwise, show the confirmation message
+                        const confirmed = confirm('Are you sure you want to remove the selected item(s) from the cart?');
+                        if (!confirmed) {
+                            event.preventDefault(); // Prevent the default action if the user cancels
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+
 </head>
 
 <body>
@@ -48,9 +79,6 @@ session_start();
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="./users_area/user_registration.php">Register</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Contact</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="cart.php"><i class="fa-solid fa-cart-shopping"></i><sup><?php cart_item(); ?></sup></a>
@@ -148,7 +176,7 @@ session_start();
                                     <tr>
                                         <td><?php echo $product_title ?></td>
                                         <td><img src="./admin_area/product_images/<?php echo $product_image1 ?>" alt="" class="cart_img"></td>
-                                        <td><input type="text" name="qty" class="form-input w-50"></td>
+                                        <td><input type="number" name="qty" class="form-input w-50" min="0" max="10" pattern="[0-9]{1,2}" title="Please enter a number between 0 and 10"></td>
                                         <?php
                                         $get_ip_add = getIPAddress();
                                         if (isset($_POST['update_cart'])) {
@@ -165,7 +193,7 @@ session_start();
                                             <!-- <button class="bg-info px-3 border-0 mx-3">Update</button> -->
                                             <input type="submit" value="Update Cart" class="bg-info px-3 border-0 mx-3" name="update_cart">
                                             <!-- <button class="bg-info px-3 border-0 mx-3">Remove</button> -->
-                                            <input type="submit" value="Remove Cart" class="bg-info px-3 border-0 mx-3" name="remove_cart">
+                                            <input type="submit" value="Remove Cart" class="bg-info px-3 border-0 mx-3 remove-cart-btn" name="remove_cart">
                                         </td>
                                     </tr>
                         <?php

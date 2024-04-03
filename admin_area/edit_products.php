@@ -48,7 +48,8 @@ if (isset($_GET['edit_products'])) {
     <form action="" method="post" enctype="multipart/form-data">
         <div class="form-outline w-50 m-auto mb-4">
             <label for="product_title" class="form-label">Product Title</label>
-            <input type="text" name="product_title" id="product_title" value="<?php echo $product_title; ?>" class="form-control" required="required">
+            <input type="text" name="product_title" id="product_title" value="<?php echo $product_title; ?>" class="form-control" required="required" minlength="2" maxlength="20">
+            <small class="form-text text-muted">Title must be between 2 and 20 characters long.</small>
         </div>
         <div class="form-outline w-50 m-auto mb-4">
             <label for="product_desc" class="form-label">Product Description</label>
@@ -94,27 +95,27 @@ if (isset($_GET['edit_products'])) {
         <div class="form-outline w-50 m-auto mb-4">
             <label for="product_image1" class="form-label">Product Image1</label>
             <div class="d-flex">
-                <input type="file" name="product_image1" id="product_image1" class="form-control w-90 m-auto" required="required">
+                <input type="file" name="product_image1" id="product_image1" class="form-control w-90 m-auto" required="required" accept="image/jpeg, image/png">
                 <img src="./product_images/<?php echo $product_image1; ?>" alt="" class="product_img">
             </div>
         </div>
         <div class="form-outline w-50 m-auto mb-4">
             <label for="product_image2" class="form-label">Product Image2</label>
             <div class="d-flex">
-                <input type="file" name="product_image2" id="product_image2" class="form-control w-90 m-auto" required="required">
+                <input type="file" name="product_image2" id="product_image2" class="form-control w-90 m-auto" required="required" accept="image/jpeg, image/png">
                 <img src="./product_images/<?php echo $product_image2; ?>" alt="" class="product_img">
             </div>
         </div>
         <div class="form-outline w-50 m-auto mb-4">
             <label for="product_image3" class="form-label">Product Image3</label>
             <div class="d-flex">
-                <input type="file" name="product_image3" id="product_image3" class="form-control w-90 m-auto" required="required">
+                <input type="file" name="product_image3" id="product_image3" class="form-control w-90 m-auto" required="required" accept="image/jpeg, image/png">
                 <img src="./product_images/<?php echo $product_image3; ?>" alt="" class="product_img">
             </div>
         </div>
         <div class="form-outline w-50 m-auto mb-4">
             <label for="product_price" class="form-label">Product Price</label>
-            <input type="text" name="product_price" id="product_price" value="<?php echo $product_price; ?>" class="form-control" required="required">
+            <input type="number" name="product_price" id="product_price" value="<?php echo $product_price; ?>" class="form-control" required="required">
         </div>
         <div class="w-50 m-auto">
             <input type="submit" name="edit_product" value="Update Product" class="btn btn-info px-3 mb-3">
@@ -161,7 +162,7 @@ product_image2='$product_image2', product_image3='$product_image3', product_pric
         $result_update = mysqli_query($con, $update_product);
         if ($result_update) {
             echo "<script>alert('Product updated successfully')</script>";
-            echo "<script>window.open('./insert_product.php','_self')</script>";
+            echo "<script>window.open('./index.php','_self')</script>";
         }
     }
 }
