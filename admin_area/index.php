@@ -88,7 +88,7 @@ include("../functions/common_function.php");
                     <p class="text-light text-center">Admin Name</p>
                 </div>
                 <div class="button text-center">
-                    <button class="my-3"><a href="insert_product.php" class="nav-link text-light bg-info my-1">Insert Product</a></button>
+                    <button class="my-3"><a href="index.php?insert_product" class="nav-link text-light bg-info my-1">Insert Product</a></button>
                     <button><a href="index.php?view_products" class="nav-link text-light bg-info my-1">View Product</a></button>
                     <button><a href="index.php?insert_category" class="nav-link text-light bg-info my-1">Insert Categories</a></button>
                     <button><a href="index.php?view_categories" class="nav-link text-light bg-info my-1">View Categories</a></button>
@@ -106,6 +106,9 @@ include("../functions/common_function.php");
         <!-- Fourth child -->
         <div class="container my-3">
             <?php
+            if (isset($_GET['insert_product'])) {
+                include('insert_product.php');
+            }
             if (isset($_GET['insert_category'])) {
                 include('insert_categories.php');
             }
