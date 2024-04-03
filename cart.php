@@ -136,75 +136,77 @@ session_start();
                         $result = mysqli_query($con, $cart_query);
                         $result_count = mysqli_num_rows($result);
                         if ($result_count > 0) {
-
                             echo "<thead>
-                                <tr>
-                                    <th>Product Title</th>
-                                    <th>Product Image</th>
-                                    <th>Quantity</th>
-                                    <th>Total Price</th>
-                                    <th>Remove</th>
-                                    <th colspan='2'>Operations</th>
-                                </tr>
-                            </thead>
-                            <tbody>";
+        <tr>
+            <th>Product Title</th>
+            <th>Product Image</th>
+            <th>Quantity</th>
+            <th>Total Price</th>
+            <th>Remove</th>
+        </tr>
+    </thead>
+    <tbody>";
                             while ($row = mysqli_fetch_array($result)) {
                                 $product_id = $row['product_id'];
                                 $select_product = "SELECT * FROM `products` WHERE product_id='$product_id'";
                                 $result_product = mysqli_query($con, $select_product);
                                 while ($row_product_price = mysqli_fetch_array($result_product)) {
-                                    $product_price = array($row_product_price['product_price']);
+                                    $product_price = $row_product_price['product_price'];
                                     $price_table = $row_product_price['product_price'];
                                     $product_title = $row_product_price['product_title'];
                                     $product_image1 = $row_product_price['product_image1'];
-                                    $product_values = array_sum($product_price);
-                                    $total_price += $product_values;
-
+                                    $quantity = $row['quantity'];
+                                    $product_total_price = $product_price * $quantity;
+                                    $total_price += $product_total_price;
                         ?>
-
-                                    <!-- <thead>
-                                        <tr>
-                                            <th>Product Title</th>
-                                            <th>Product Image</th>
-                                            <th>Quantity</th>
-                                            <th>Total Price</th>
-                                            <th>Remove</th>
-                                            <th colspan='2'>Operations</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody> -->
                                     <tr>
                                         <td><?php echo $product_title ?></td>
                                         <td><img src="./admin_area/product_images/<?php echo $product_image1 ?>" alt="" class="cart_img"></td>
-                                        <td><input type="number" name="qty" class="form-input w-50" min="0" max="10" pattern="[0-9]{1,2}" title="Please enter a number between 0 and 10"></td>
-                                        <?php
-                                        $get_ip_add = getIPAddress();
-                                        if (isset($_POST['update_cart'])) {
-                                            $quantities = $_POST['qty'];
-                                            $product_id = $row['product_id'];
-                                            $update_cart = "UPDATE `cart_details` SET quantity='$quantities' WHERE product_id='$product_id'";
-                                            $result_products_quantity = mysqli_query($con, $update_cart);
-                                            $total_price = $total_price * $quantities;
-                                        }
-                                        ?>
-                                        <td><?php echo $price_table ?>/-</td>
+                                        <td><input type="number" name="qty[<?php echo $product_id; ?>]" class="form-input w-50" min="0" max="10" pattern="[0-9]{1,2}" title="Please enter a number between 0 and 10" value="<?php echo $quantity ?>"></td>
+                                        <td><?php echo $product_price ?>/-</td>
                                         <td><input type="checkbox" name="removeitem[]" value="<?php echo $product_id ?>"></td>
-                                        <td>
-                                            <!-- <button class="bg-info px-3 border-0 mx-3">Update</button> -->
-                                            <input type="submit" value="Update Cart" class="bg-info px-3 border-0 mx-3" name="update_cart">
-                                            <!-- <button class="bg-info px-3 border-0 mx-3">Remove</button> -->
-                                            <input type="submit" value="Remove Cart" class="bg-info px-3 border-0 mx-3 remove-cart-btn" name="remove_cart">
-                                        </td>
                                     </tr>
+
                         <?php
                                 }
                             }
+                            echo "</tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan='5'>
+                                        <input type='submit' value='Update Cart' class='bg-info px-3 border-0 mx-3' name='update_cart' style='font-weight:bold;'>
+                                        <input type='submit' value='Remove Cart' class='bg-danger px-3 border-0 mx-3 remove-cart-btn' name='remove_cart' style='font-weight:bold;'>
+                                    </td>
+                                </tr>
+                            </tfoot>";
                         } else {
                             echo "<h2 class='text-center text-danger'>Cart is empty</h2>";
+                        }
+
+                        // Update quantities and total price
+                        if (isset($_POST['update_cart'])) {
+                            foreach ($_POST['qty'] as $product_id => $quantity) {
+                                $update_cart = "UPDATE `cart_details` SET quantity='$quantity' WHERE product_id='$product_id'";
+                                $result_products_quantity = mysqli_query($con, $update_cart);
+                            }
+                            // Recalculate the total price based on the updated quantities
+                            $total_price = 0;
+                            $result = mysqli_query($con, $cart_query);
+                            while ($row = mysqli_fetch_array($result)) {
+                                $product_id = $row['product_id'];
+                                $select_product = "SELECT * FROM `products` WHERE product_id='$product_id'";
+                                $result_product = mysqli_query($con, $select_product);
+                                while ($row_product_price = mysqli_fetch_array($result_product)) {
+                                    $product_price = $row_product_price['product_price'];
+                                    $quantity = $row['quantity'];
+                                    $total_price += $product_price * $quantity;
+                                }
+                            }
                         }
                         ?>
                         </tbody>
                     </table>
+
                     <!-- subtotal -->
                     <div class="d-flex mb-5">
                         <?php
