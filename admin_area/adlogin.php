@@ -3,16 +3,15 @@ include("../includes/connect.php");
 include("../functions/common_function.php");
 session_start();
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $postdata = file_get_contents("php://input");
     $request = json_decode($postdata);
 
-    if ($request && isset($request->admin_username) && isset($request->admin_password)) {
-        $admin_username = mysqli_real_escape_string($con, $request->admin_username);
+    if ($request && isset($request->admin_name) && isset($request->admin_password)) {
+        $admin_name = mysqli_real_escape_string($con, $request->admin_name);
         $admin_password = mysqli_real_escape_string($con, $request->admin_password);
 
-        $select_query = "SELECT * FROM `admin_table` WHERE admin_name='$admin_username'";
+        $select_query = "SELECT * FROM `admin_table` WHERE admin_name='$admin_name'";
         $result = mysqli_query($con, $select_query);
 
         if (!$result) {
@@ -24,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $row_data = mysqli_fetch_assoc($result);
             if (password_verify($admin_password, $row_data['admin_password'])) {
                 $_SESSION['admin_id'] = $row_data['admin_id'];
-                $_SESSION['admin_username'] = $admin_username;
+                $_SESSION['admin_name'] = $admin_name;
                 echo json_encode(array("success" => true, "message" => "Login Successful"));
             } else {
                 echo json_encode(array("success" => false, "message" => "Incorrect password"));

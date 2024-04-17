@@ -580,25 +580,75 @@ app.controller('BrandController', function ($scope, $http) {
             });
     };
 
+
     $scope.adlogin = function () {
         var data = {
-            admin_username: $scope.username,
-            admin_password: $scope.password
+            admin_name: $scope.admin_name,
+            admin_password: $scope.admin_password
         };
+
         $http.post('adlogin.php', data)
             .then(function (response) {
-                console.log(response);
+                console.log(response.data);
                 if (response.data.success) {
-                    window.location.href = 'index.php';
+                    alert('Login Successful');
+                    setTimeout(function () {
+                        window.location.href = 'index.php';
+                    });
                 } else {
-                    alert(response.data.message);
+                    alert('Invalid Credentials');
                 }
             })
             .catch(function (error) {
-                console.error('Error:', error);
+                console.error('Error logging in:', error);
+                alert('An error occurred while logging in.');
             });
     };
 
+    // $scope.formData = {};
+
+    // $scope.adregister = function () {
+    //     $http.post('adRegistration.php', $scope.formData)
+    //         .then(function (response) {
+    //             if (response.data.success) {
+    //                 alert('Registration Successful');
+    //                 window.location.href = 'admin_login.php';
+    //             } else {
+    //                 alert(response.data.message);
+    //             }
+    //         })
+    //         .catch(function (error) {
+    //             console.error('Error:', error);
+    //             alert('An error occurred while registering.');
+    //         });
+    // };
+
+
+    $scope.admin = {};
+
+    $scope.registeradmin = function () {
+        var data = {
+            admin_name: $scope.admin.admin_name,
+            admin_email: $scope.admin.admin_email,
+            admin_password: $scope.admin.admin_password,
+            confirm_password: $scope.admin.confirm_password
+        };
+
+        $http.post('adregistration.php', data)
+            .then(function (response) {
+                console.log(response.data);
+                if (response.data.success) {
+                    alert('Registered Successfully');
+                    window.location.href = './admin_login.php';
+                } else {
+                    alert('Registration Failed: ' + response.data.message);
+                }
+            })
+            .catch(function (error) {
+                console.error('Error registering admin:', error);
+                alert('An error occurred while registering the admin.');
+            });
+    };
 });
 
 
