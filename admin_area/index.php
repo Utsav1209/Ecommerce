@@ -60,13 +60,13 @@ include("../functions/common_function.php");
                     <ul class="navbar-nav">
                         <li class="nav-item">
                             <?php
-                            if (!isset($_SESSION['username'])) {
+                            if (!isset($_SESSION['admin_name'])) {
                                 echo "  <li class='nav-item'>
                     <a class='nav-link' href='#'>Welcome Guest</a>
                 </li>";
                             } else {
                                 echo "<li class='nav-item'>
-                    <a class='nav-link' href='#'>Welcome " . $_SESSION['username'] . "</a>
+                    <a class='nav-link' href='#'>Welcome " . $_SESSION['admin_name'] . "</a>
                 </li>";
                             }
                             ?>
