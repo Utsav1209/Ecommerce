@@ -4,11 +4,16 @@ session_start();
 if (isset($_GET['order_id'])) {
     $order_id = $_GET['order_id'];
     // echo $order_id;
-    $select_data = "SELECT * FROM `user_orders` WHERE order_id=$order_id";
+    $select_data = "SELECT * FROM `user_orders` WHERE order_id='$order_id'";
     $result = mysqli_query($con, $select_data);
     $row_fetch = mysqli_fetch_assoc($result);
-    $invoice_number = $row_fetch["invoice_number"];
-    $amount_due = $row_fetch["amount_due"];
+    if ($row_fetch !== null) {
+        $invoice_number = $row_fetch["invoice_number"];
+        $amount_due = $row_fetch["amount_due"];
+    } else {
+
+        echo "No order found for the provided order ID.";
+    }
 }
 
 if (isset($_POST["confirm_payment"])) {

@@ -172,7 +172,7 @@ function getbrands()
 function getcategories()
 {
     global $con;
-    $select_categories = "Select * from `categories`";
+    $select_categories = "SELECT * FROM `categories`";
     $result_categories = mysqli_query($con, $select_categories);
     while ($row_data = mysqli_fetch_assoc($result_categories)) {
         $category_name = $row_data['category_title'];
@@ -346,6 +346,8 @@ function cart_item()
 }
 
 // total price function
+// cart.php
+
 function total_cart_price()
 {
     global $con;
@@ -363,8 +365,15 @@ function total_cart_price()
             $total_price += $product_values;
         }
     }
-    echo "$total_price";
+    return $total_price;
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'total-price') {
+    $totalPrice = total_cart_price();
+    echo json_encode(array('totalPrice' => $totalPrice));
+}
+
+
 
 // get user order detail
 function get_user_order_details()

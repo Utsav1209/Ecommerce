@@ -18,11 +18,13 @@ session_start();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- CSS file -->
     <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="navbarController.js"></script>
 </head>
 
-<body>
+<body ng-app="ecommerceApp">
     <!-- navbar -->
-    <div class="container-fluid p-0">
+    <div class="container-fluid p-0" ng-controller="BrandController">
         <!-- first child -->
         <nav class="navbar navbar-expand-lg bg-info navbar-light">
             <div class="container-fluid">
@@ -109,27 +111,31 @@ session_start();
             </div>
             <div class="col-md-2 bg-secondary p-0">
                 <!-- Brands to be display -->
-                <ul class="navbar-nav me-auto text-center">
-                    <li class="nav-item bg-info">
-                        <a href="#" class="nav-link text-light">
-                            <h4>Delivery Brands</h4>
-                        </a>
-                    </li>
-                    <?php
-                    getbrands();
-                    ?>
-                </ul>
+                <div ng-init="fetchBrands()">
+                    <ul class="navbar-nav me-auto text-center">
+                        <li class="nav-item bg-info">
+                            <a href="#" class="nav-link text-light">
+                                <h4>Delivery Brands</h4>
+                            </a>
+                        </li>
+                        <div ng-repeat="brand in Bnames">
+                            <a href="index.php?brand={{brand.brand_id}}">{{ brand.brand_name }}</a>
+                        </div>
+                    </ul>
+                </div>
                 <!-- categories to be display -->
-                <ul class="navbar-nav me-auto text-center">
-                    <li class="nav-item bg-info">
-                        <a href="#" class="nav-link text-light">
-                            <h4>Categories</h4>
-                        </a>
-                    </li>
-                    <?php
-                    getcategories();
-                    ?>
-                </ul>
+                <div ng-init="fetchCategories()">
+                    <ul class="navbar-nav me-auto text-center">
+                        <li class="nav-item bg-info">
+                            <a href="#" class="nav-link text-light">
+                                <h4>Categories</h4>
+                            </a>
+                        </li>
+                        <div ng-repeat="category in Cnames">
+                            <a href="index.php?category={{category.category_id}}">{{ category.category_title }}</a>
+                        </div>
+                    </ul>
+                </div>
             </div>
         </div>
         <!-- Last child -->

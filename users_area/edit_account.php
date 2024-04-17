@@ -1,45 +1,3 @@
-<?php
-include("../includes/connect.php");
-
-if (isset($_GET['edit_account'])) {
-    $user_session_name = $_SESSION['username'];
-    $select_query = "SELECT * FROM `user_table` WHERE username='$user_session_name'";
-    $result_query = mysqli_query($con, $select_query);
-    $row_fetch = mysqli_fetch_assoc($result_query);
-    $user_id = $row_fetch['user_id'];
-    $username = $row_fetch['username'];
-    $user_email = $row_fetch['user_email'];
-    $user_address = $row_fetch['user_address'];
-    $user_mobile = $row_fetch['user_mobile'];
-}
-
-if (isset($_POST['user_update'])) {
-    $update_id = $user_id;
-    $username = $_POST['user_username'];
-    $user_email = $_POST['user_email'];
-    $user_address = $_POST['user_address'];
-    $user_mobile = $_POST['user_mobile'];
-    $user_image1 = $_FILES['user_image']['name'];
-    $user_image_tmp = $_FILES['user_image']['tmp_name'];
-    move_uploaded_file($user_image_tmp, "./user_images/$user_image");
-
-    // Update query
-    $update_data = "UPDATE `user_table` SET username='$username', user_email='$user_email', 
-    user_image='$user_image1', user_address='$user_address', user_mobile='$user_mobile' WHERE user_id='$update_id'";
-    $result_query_update = mysqli_query($con, $update_data);
-    if ($result_query_update) {
-        echo "<script>alert('Data updated successfully')</script>";
-        echo "<script>window.open('../index.php','_self')</script>";
-    } else {
-        echo "<script>alert('Failed to update data')</script>";
-    }
-}
-
-
-
-?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -51,27 +9,32 @@ if (isset($_POST['user_update'])) {
 
 <body>
     <h3 class="text-center text-success mb-4">Edit Account</h3>
-    <form action="" method="post" enctype="multipart/form-data">
+    <form ng-submit="updateAccount()" enctype="multipart/form-data">
         <div class="form-outline mb-4">
-            <input type="text" id="" class="form-control w-50 m-auto" value="<?php echo $username ?>" name='user_username' required minlength="5" maxlength="20">
+            <input type="text" class="form-control w-50 m-auto" ng-model="formData.username" required minlength="5" maxlength="20">
         </div>
         <div class="form-outline mb-4">
-            <input type="email" id="" class="form-control w-50 m-auto" value="<?php echo $user_email ?>" name='user_email'>
+            <input type="email" class="form-control w-50 m-auto" ng-model="formData.user_email">
         </div>
         <div class="form-outline mb-4 d-flex w-50 m-auto">
-            <input type="file" id="" class="form-control m-auto" name='user_image' accept="image/jpeg, image/png">
-            <img src="./user_images/<?php echo $user_image ?>" alt="" class="edit_image">
+            <input type="file" class="form-control m-auto" ng-model="formData.user_image" accept="image/jpeg, image/png, image/jpg">
+            <img ng-src="{{ imageSrc }}" alt="" class="edit_image">
             <small id="image_error" class="text-danger"></small>
         </div>
         <div class="form-outline mb-4">
-            <input type="text" id="" class="form-control w-50 m-auto" value="<?php echo $user_address ?>" name='user_address'>
+            <input type="text" class="form-control w-50 m-auto" ng-model="formData.user_address">
         </div>
         <div class="form-outline mb-4">
-            <input type="number" id="" class="form-control w-50 m-auto" value="<?php echo $user_mobile ?>" name='user_mobile' required pattern="[0-9]{10}">
+            <input type="tel" class="form-control w-50 m-auto" ng-model="formData.user_mobile" required pattern="[0-9]{10}">
             <small id="contact_error" class="text-danger"></small>
         </div>
-        <input type="submit" value="Update" id="" class="bg-info py-2 px-3 border-0" name='user_update'>
+        <input type="submit" value="Update" name="user_update" class="bg-info py-2 px-3 border-0">
     </form>
+
+    <div class="text-success" ng-if="updateSuccess">
+        Account updated successfully!
+    </div>
+
 </body>
 
 </html>

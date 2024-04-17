@@ -7,7 +7,6 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 
-
 if (isset($_POST["insert_cat"])) {
     $category_title = $_POST['cat_title'];
 

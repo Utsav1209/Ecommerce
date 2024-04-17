@@ -11,7 +11,7 @@ include("../functions/common_function.php");
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="ecommerceApp">
 
 <head>
     <meta charset="UTF-8">
@@ -24,6 +24,8 @@ include("../functions/common_function.php");
     <!-- font awsome link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="../style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="../navbarController.js"></script>
     <style>
         .admin_image {
             width: 100px;
@@ -47,7 +49,7 @@ include("../functions/common_function.php");
     </style>
 </head>
 
-<body>
+<body ng-controller="BrandController">
     <!-- navbar -->
     <div class="container-fluid p-0">
         <!-- First child -->
@@ -137,10 +139,10 @@ include("../functions/common_function.php");
                 include('edit_brands.php');
             }
             if (isset($_GET['delete_category'])) {
-                include('delete_category.php');
+                include('deleteCategories.php');
             }
             if (isset($_GET['delete_brands'])) {
-                include('delete_brands.php');
+                include('deleteBrand.php');
             }
             if (isset($_GET['list_orders'])) {
                 include('list_orders.php');

@@ -1,34 +1,22 @@
-<h3 class="text-center text-success">All Categories</h3>
-<table class="table table-boardered mt-5">
-    <thead class="bg-info">
-        <tr class="text-center">
-            <th>Slno</th>
-            <th>Category Title</th>
-            <th>Edit</th>
-            <th>Delete</th>
-        </tr>
-    </thead>
-    <tbody class="bg-secondary">
-        <?php
-        $select_cat = "SELECT * FROM `categories`";
-        $result = mysqli_query($con, $select_cat);
-        $number = 0;
-        while ($row = mysqli_fetch_assoc($result)) {
-            $category_id = $row['category_id'];
-            $category_title = $row['category_title'];
-            $number++;
-
-        ?>
+<!-- HTML View -->
+<div ng-model="ecommerceApp" ng-controller="BrandController">
+    <h3 class="text-center text-success">All Categories</h3>
+    <table class="table table-boardered mt-5">
+        <thead class="bg-info">
             <tr class="text-center">
-                <td><?php echo $number; ?></td>
-                <td><?php echo $category_title; ?></td>
-                <td><a href='index.php?edit_category=<?php echo $category_id; ?>'><i class='fa-solid fa-pen-to-square'></i></a></td>
-                <td><a href='index.php?delete_category=<?php echo $category_id; ?>' onclick="return confirm('Are you sure you want to delete this category?');"><i class='fa-solid fa-trash'></i></a></td>
+                <th>Slno</th>
+                <th>Category Title</th>
+                <th>Edit</th>
+                <th>Delete</th>
             </tr>
-        <?php
-
-        }
-        ?>
-    </tbody>
-
-</table>
+        </thead>
+        <tbody class="bg-secondary">
+            <tr class="text-center" ng-repeat="category in categories">
+                <td>{{$index + 1}}</td>
+                <td>{{category.category_title}}</td>
+                <td><a href="index.php?edit_category={{category.category_id}}"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                <td><a href="#" ng-click="deleteCategory(category.category_id)" ng-confirm-click="Are you sure you want to delete this Category?"><i class="fa-solid fa-trash"></i></a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

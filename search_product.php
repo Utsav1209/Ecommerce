@@ -2,6 +2,7 @@
 <?php
 include("includes/connect.php");
 include("functions/common_function.php");
+// include("searchProduct.php");
 session_start();
 ?>
 
@@ -18,11 +19,13 @@ session_start();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- CSS file -->
     <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="navbarController.js"></script>
 </head>
 
-<body>
+<body ng-app="ecommerceApp">
     <!-- navbar -->
-    <div class="container-fluid p-0">
+    <div class="container-fluid p-0" ng-controller="BrandController">
         <!-- first child -->
         <nav class="navbar navbar-expand-lg bg-info navbar-light">
             <div class="container-fluid">
@@ -93,15 +96,30 @@ session_start();
         </div>
         <!-- Fourth child -->
         <div class="row">
-
             <div class="col-md-10">
-
                 <!-- Products -->
                 <div class="row px-1">
+                    <div class="row">
+                        <div class="col-md-4 mb-2" ng-repeat="product in searchproducts">
+                            <div class="card">
+                                <img ng-src="./admin_area/product_images/{{ product.product_image1 }}" class="card-img-top" alt="{{ product.product_title }}">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ product.product_title }}</h5>
+                                    <p class="card-text">{{ product.product_description }}</p>
+                                    <p class="card-title">Price: {{ product.product_price }}/-</p>
+                                    <a href="index.php?add_to_cart={{ product.product_id }}" class="btn btn-info">Add to Cart</a>
+                                    <a href="product_details.php?product_id={{ product.product_id }}" class="btn btn-success">View more</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                    <!-- fetching products -->
+                    <!-- Display message if no products found -->
+                    <div class="col-md-12">
+                        <h2 class="text-center text-danger" ng-if="noProductMessage">{{ noProductMessage }}</h2>
+                    </div>
                     <?php
-                    search_product();
+                    // search_product();
                     get_unique_categories();
                     get_unique_brands();
                     ?>
