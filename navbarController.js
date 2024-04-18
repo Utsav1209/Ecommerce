@@ -285,8 +285,10 @@ app.controller('BrandController', function ($scope, $http) {
 
     $scope.insertCategory = function () {
         var categoryName = $scope.categoryName;
+        console.log('dsfdsf', $scope.categoryName);
         $http.post('insertCategory.php', { category_name: categoryName })
             .then(function (response) {
+                console.log('asdasdasd', response);
                 alert('Category has been inserted successfully');
                 $scope.categoryName = '';
             })
@@ -413,14 +415,14 @@ app.controller('BrandController', function ($scope, $http) {
 
         formData.append('product_title', $scope.product_title);
         console.log('$scope.product_title:', $scope.product_title);
-        formData.append('description', $scope.description);
-        console.log('$scope.description:', $scope.description);
+        formData.append('product_description', $scope.product_description);
+        console.log('$scope.product_description:', $scope.product_description);
         formData.append('product_keywords', $scope.product_keywords);
         console.log('$scope.product_keywords:', $scope.product_keywords);
-        formData.append('product_category', $scope.product_category);
-        console.log('$scope.product_category:', $scope.product_category);
-        formData.append('product_brands', $scope.product_brands);
-        console.log('$scope.product_brands:', $scope.product_brands);
+        formData.append('category_id', $scope.category_id);
+        console.log('$scope.category_id:', $scope.category_id);
+        formData.append('brand_id', $scope.brand_id);
+        console.log('$scope.brand_id:', $scope.brand_id);
         // formData.append('product_image1', $scope.product_image1);
         formData.append('filename', filename);
         console.log('$scope.product_image1:', filename);
