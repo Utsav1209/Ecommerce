@@ -30,7 +30,7 @@
 </form>
 
 <?php
-$username_session = $_SESSION['username'];
+// $username_session = $_SESSION['username'];
 if (isset($_POST['delete'])) {
     // Add code to delete the account here
     $delete_query = "DELETE FROM `user_table` WHERE username='$username_session'";

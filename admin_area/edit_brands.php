@@ -1,8 +1,3 @@
-<?php
-include("./fetchBrandData.php");
-include("editBrand.php");
-?>
-
 <div class="container mt-3" ng-app="ecommerceApp" ng-controller="BrandController">
     <h1 class="text-center">Edit Brand</h1>
     <form ng-submit="editBrand()" class="text-center">

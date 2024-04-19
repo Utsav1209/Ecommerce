@@ -1,8 +1,75 @@
-var app = angular.module('ecommerceApp', []);
+var app = angular.module('ecommerceApp', ['ngRoute']);
 
-app.controller('BrandController', function ($scope, $http) {
+app.config(["$routeProvider", function ($routeProvider) {
+    $routeProvider.
+        when("/cart", {
+            templateUrl: "cart.php",
+        }).
+        when("/home", {
+            templateUrl: "home.php",
+
+        }).
+        when("/display_all", {
+            templateUrl: "display_all.php",
+        }).
+        when("/profile", {
+            templateUrl: "./users_area/profile.php",
+        }).
+        when("/edit_account", {
+            templateUrl: "./users_area/edit_account.php",
+            controller: "EditAccountController"
+        }).
+        when("/my_orders", {
+            templateUrl: "./users_area/user_orders.php",
+        }).
+        when("/delete_account", {
+            templateUrl: "./users_area/delete_account.php",
+        })
 
 
+}]);
+app.controller('getOrder', function ($scope, $http) {
+    $scope.loading = true;
+    $scope.error = '';
+
+    $http.get('getOrders.php')
+        .then(function (response) {
+            $scope.loading = false;
+            $scope.orders = response.data;
+            console.log(orders.order_status)
+        })
+        .catch(function (error) {
+            $scope.loading = false;
+            $scope.error = 'Error fetching orders: ' + error.statusText;
+        });
+});
+
+app.controller('EditAccountController', function ($scope, $http) {
+
+    $scope.updateAccount = function () {
+        var formData = new FormData();
+        angular.forEach($scope.formData, function (value, key) {
+            formData.append(key, value);
+        });
+
+        $http.post('updateAccount.php', formData, {
+            transformRequest: angular.identity,
+            headers: {
+                'Content-Type': undefined
+            }
+        })
+            .then(function (response) {
+                $scope.updateSuccess = true;
+                console.log('Account updated successfully');
+            })
+            .catch(function (error) {
+                console.error('Error updating account:', error);
+            });
+    };
+
+});
+
+app.controller('BrandController', function ($scope, $http, $location) {
     $scope.getPendingOrders = function () {
         $http.get('userProfile.php')
             .then(function (response) {
@@ -15,6 +82,13 @@ app.controller('BrandController', function ($scope, $http) {
             .catch(function (error) {
                 console.error('Error fetching pending orders:', error);
             });
+    };
+
+    var hideFunctionPaths = ['/profile', '/edit_account', '/my_orders', '/delete_account', '/cart'];
+
+    $scope.shouldHideFunctions = function () {
+        var currentPath = $location.path();
+        return hideFunctionPaths.includes(currentPath);
     };
 
     // Call the function when the controller loads
@@ -162,29 +236,6 @@ app.controller('BrandController', function ($scope, $http) {
         .catch(function (error) {
             console.error('Error fetching user data:', error);
         });
-
-
-    $scope.updateAccount = function () {
-        var formData = new FormData();
-        angular.forEach($scope.formData, function (value, key) {
-            formData.append(key, value);
-        });
-
-        $http.post('updateAccount.php', formData, {
-            transformRequest: angular.identity,
-            headers: {
-                'Content-Type': undefined
-            }
-        })
-            .then(function (response) {
-                $scope.updateSuccess = true;
-                console.log('Account updated successfully');
-            })
-            .catch(function (error) {
-                console.error('Error updating account:', error);
-            });
-    };
-
 
     $scope.loading = true;
     $scope.error = '';
@@ -409,10 +460,6 @@ app.controller('BrandController', function ($scope, $http) {
 
     $scope.insertProduct = function () {
         var formData = new FormData();
-        var filename = document.getElementById('product_image1').files[0];
-        var filename2 = document.getElementById('product_image2').files[0];
-        var filename3 = document.getElementById('product_image3').files[0];
-
         formData.append('product_title', $scope.product_title);
         console.log('$scope.product_title:', $scope.product_title);
         formData.append('product_description', $scope.product_description);
@@ -423,18 +470,21 @@ app.controller('BrandController', function ($scope, $http) {
         console.log('$scope.category_id:', $scope.category_id);
         formData.append('brand_id', $scope.brand_id);
         console.log('$scope.brand_id:', $scope.brand_id);
-        // formData.append('product_image1', $scope.product_image1);
-        formData.append('filename', filename);
-        console.log('$scope.product_image1:', filename);
-        // formData.append('product_image2', $scope.product_image2);
-        formData.append('filename', filename2);
-        console.log('$scope.product_image2:', filename2);
-        // formData.append('product_image3', $scope.product_image3);
-        formData.append('filename', filename3);
-        console.log('$scope.product_image3:', filename3);
+
+        var filename = document.getElementById('product_image1').files[0];
+        var filename2 = document.getElementById('product_image2').files[0];
+        var filename3 = document.getElementById('product_image3').files[0];
+
+        formData.append('product_image1', filename);
+        formData.append('product_image2', filename2);
+        formData.append('product_image3', filename3);
+
         formData.append('product_price', $scope.product_price);
         console.log('$scope.product_price:', $scope.product_price);
+
         console.log('FormData:', formData);
+
+
         $http.post('insertProduct.php', formData, {
             transformRequest: angular.identity,
             headers: {
@@ -442,13 +492,13 @@ app.controller('BrandController', function ($scope, $http) {
             }
         })
             .then(function (response) {
-                console.log('ResponseP:', response);
+                console.log('ResponseP:', response.data);
                 alert('Product inserted successfully');
                 $scope.product_title = '';
-                $scope.description = '';
+                $scope.product_description = '';
                 $scope.product_keywords = '';
-                $scope.product_category = '';
-                $scope.product_brands = '';
+                $scope.categoru_id = '';
+                $scope.brand_id = '';
                 document.getElementById('product_image1').value = '';
                 document.getElementById('product_image2').value = '';
                 document.getElementById('product_image3').value = '';
@@ -520,6 +570,7 @@ app.controller('BrandController', function ($scope, $http) {
     $scope.fetchCategoryData = function (categoryId) {
         $http.get('fetchCategoryData.php?edit_category=' + categoryId)
             .then(function (response) {
+                console.log('fetch:', response.data);
                 $scope.formData = response.data;
             })
             .catch(function (error) {
@@ -529,16 +580,17 @@ app.controller('BrandController', function ($scope, $http) {
 
     var urlParams = new URLSearchParams(window.location.search);
     var categoryId = urlParams.get('edit_category');
-    console.log('Category', categoryId);
     $scope.fetchCategoryData(categoryId);
 
-    // Function to edit category
+    // Update category
     $scope.editCategory = function () {
+        console.log('edited title', $scope.formData.category_title);
         $http.post('editCategory.php', { category_id: categoryId, category_title: $scope.formData.category_title })
             .then(function (response) {
-                console.log(response);
+                console.log('response', response.data);
                 if (response.data.success) {
                     alert('Category updated successfully');
+                    window.location.href = './index.php?view_categories';
                 } else {
                     alert('Error updating category');
                 }
@@ -572,6 +624,7 @@ app.controller('BrandController', function ($scope, $http) {
                 console.log(response);
                 if (response.data.success) {
                     alert('Brand updated successfully');
+                    window.location.href = './index.php?view_brands';
                 } else {
                     alert('Error updating brand');
                 }

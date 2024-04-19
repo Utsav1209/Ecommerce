@@ -2,9 +2,6 @@
 include("../includes/connect.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Debugging: Print the contents of $_POST and $_FILES arrays
-    // var_dump($_POST);
-    // var_dump($_FILES);
 
     // Check if all required fields are set
     if (
@@ -47,8 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Insert query
         $insert_products = "INSERT INTO `products` (product_title, product_description, product_keywords, category_id, brand_id,
-        product_image1, product_image2, product_image3, product_price, date, status) VALUES ('$product_title', '$product_description', '$product_keywords', '$category_id',
-        '$brand_id', '$product_image1', '$product_image2', '$product_image3', '$product_price', NOW(), '$product_status')";
+        product_image1, product_image2, product_image3, product_price, date, status) VALUES ('$product_title', '$product_description', '$product_keywords', '$category_id', '$brand_id', '$product_image1', '$product_image2', '$product_image3', '$product_price', NOW(), '$product_status')";
 
         // Execute the query
         $result_query = mysqli_query($con, $insert_products);

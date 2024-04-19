@@ -1,7 +1,3 @@
-<?php
-include("./insertProduct.php");
-?>
-
 <!DOCTYPE html>
 <html lang="en" ng-app="ecommerceApp">
 
@@ -57,7 +53,7 @@ include("./insertProduct.php");
             </div>
             <!-- brands -->
             <div class="form-outline mb-4 w-50 m-auto">
-                <select ng-model="brnad_id" class="form-select" name="brand_id">
+                <select ng-model="brand_id" class="form-select" name="brand_id">
                     <option value="">Select a Brand</option>
                     <?php
                     $select_query = "Select * from `brands`";

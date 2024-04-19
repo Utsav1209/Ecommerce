@@ -21,6 +21,8 @@ session_start();
     <!-- CSS file -->
     <link rel="stylesheet" href="style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.js"></script>
+
     <script src="navbarController.js"></script>
 
     <style>
@@ -43,16 +45,15 @@ session_start();
                 <div class="collapse navbar-collapse" ng-class="{ 'show': isNavbarOpen }">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="index.php">Home</a>
+                            <a class="nav-link active" aria-current="page" href="#!/home">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="display_all.php">Products</a>
+                            <a class="nav-link" href="#!/display_all">Products</a>
                         </li>
-
                         <?php
                         if (isset($_SESSION['username'])) {
                             echo "<li class='nav-item'>
-                            <a class='nav-link' href='./users_area/profile.php'>My Account</a>
+                            <a class='nav-link' href='#!/profile'>My Account</a>
                         </li>";
                         } else {
                             echo "<li class='nav-item'>
@@ -61,7 +62,7 @@ session_start();
                         }
                         ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="cart.php"><i class="fa-solid fa-cart-shopping"></i><sup><?php cart_item(); ?></sup></a>
+                            <a class="nav-link" href="#!/cart"><i class="fa-solid fa-cart-shopping"></i><sup><?php cart_item(); ?></sup></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Total Price:<?php total_cart_price(); ?>/-</a>
@@ -119,58 +120,41 @@ session_start();
             <div class="col-md-10">
                 <!-- Products -->
                 <div class="row px-1">
-                    <!-- fetching products -->
-                    <!-- <div class="row">
-                        <div class="col-md-4 mb-2" ng-repeat="product in products">
-                            <div class="card">
-                                <img ng-src="./admin_area/product_images/{{ product.product_image1 }}" class="card-img-top" alt="{{ product.product_title }}">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ product.product_title }}</h5>
-                                    <p class="card-title">Price: {{ product.product_price }}/-</p>
-                                    <a href="index.php?add_to_cart={{ product.product_id }}" class="btn btn-info">Add to Cart</a>
-                                    <a href="product_details.php?product_id={{ product.product_id }}" class="btn btn-secondary">View more</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
-
-                    <?php
-                    getproducts();
-                    get_unique_categories();
-                    get_unique_brands();
-                    // $ip = getIPAddress();
-                    // echo 'User Real IP Address - ' . $ip;
-                    ?>
+                    <div ng-view></div>
                     <!-- row end -->
                 </div>
                 <!-- column end -->
             </div>
-            <div class="col-md-2 bg-secondary p-0">
+            <div class="col-md-2 bg-secondary p-0" ng-if="!shouldHideFunctions()">
                 <!-- Brands to be display -->
-                <div ng-init="fetchBrands()">
-                    <ul class="navbar-nav me-auto text-center">
-                        <li class="nav-item bg-info">
-                            <a href="#" class="nav-link text-light">
-                                <h4>Delivery Brands</h4>
-                            </a>
-                        </li>
-                        <div ng-repeat="brand in Bnames">
-                            <a href="index.php?brand={{brand.brand_id}}">{{ brand.brand_name }}</a>
-                        </div>
-                    </ul>
+                <div ng-if="!shouldHideFunctions()">
+                    <div ng-init="fetchBrands()">
+                        <ul class="navbar-nav me-auto text-center">
+                            <li class="nav-item bg-info">
+                                <a href="#" class="nav-link text-light">
+                                    <h4>Delivery Brands</h4>
+                                </a>
+                            </li>
+                            <div ng-repeat="brand in Bnames">
+                                <a href="index.php?brand={{brand.brand_id}}">{{ brand.brand_name }}</a>
+                            </div>
+                        </ul>
+                    </div>
                 </div>
                 <!-- categories to be display -->
-                <div ng-init="fetchCategories()">
-                    <ul class="navbar-nav me-auto text-center">
-                        <li class="nav-item bg-info">
-                            <a href="#" class="nav-link text-light">
-                                <h4>Categories</h4>
-                            </a>
-                        </li>
-                        <div ng-repeat="category in Cnames">
-                            <a href="index.php?category={{category.category_id}}">{{ category.category_title }}</a>
-                        </div>
-                    </ul>
+                <div ng-if="!shouldHideFunctions()">
+                    <div ng-init="fetchCategories()">
+                        <ul class="navbar-nav me-auto text-center">
+                            <li class="nav-item bg-info">
+                                <a href="#" class="nav-link text-light">
+                                    <h4>Categories</h4>
+                                </a>
+                            </li>
+                            <div ng-repeat="category in Cnames">
+                                <a href="index.php?category={{category.category_id}}">{{ category.category_title }}</a>
+                            </div>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

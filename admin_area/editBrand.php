@@ -1,10 +1,11 @@
 <?php
 
 include("../includes/connect.php");
+$data = json_decode(file_get_contents("php://input"), true);
 
-if (isset($_GET['edit_brands'])) {
-    $edit_brand = $_GET['edit_brands'];
-    $query = "SELECT * FROM brands WHERE brand_id=$edit_brand";
+if (isset($_GET['edit_brand'])) {
+    $edit_brand = $_GET['edit_brand'];
+    $query = "SELECT * FROM `brands` WHERE brand_id=$edit_brand";
     $result = mysqli_query($con, $query);
 
     if ($result && mysqli_num_rows($result) > 0) {
@@ -13,9 +14,9 @@ if (isset($_GET['edit_brands'])) {
     } else {
         echo json_encode(array('error' => 'Brand not found'));
     }
-} elseif (isset($_POST['edit_brands'])) {
-    $edit_brand = $_POST['edit_brands'];
-    $brand_name = $_POST['brand_name'];
+} elseif (isset($data['brand_id'])) {
+    $edit_brand = $data['brand_id'];
+    $brand_name = $data['brand_name'];
 
     $update_query = "UPDATE `brands` SET brand_name='$brand_name' WHERE brand_id=$edit_brand";
     $result_brand = mysqli_query($con, $update_query);

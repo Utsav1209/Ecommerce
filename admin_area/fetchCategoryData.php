@@ -12,6 +12,6 @@ if (isset($_GET['edit_category'])) {
         'category_title' => $category_title
     );
 
-    header('Content-Type: application/json');
+    // header('Content-Type: application/json');
     echo json_encode($categoryData);
 }

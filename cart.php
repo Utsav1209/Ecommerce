@@ -5,9 +5,6 @@ include("functions/common_function.php");
 session_start();
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -63,65 +60,6 @@ session_start();
     <!-- navbar -->
     <div class="container-fluid p-0">
         <!-- first child -->
-        <nav class="navbar navbar-expand-lg bg-info navbar-light">
-            <div class="container-fluid">
-                <img src="./Images/img1.png" alt="" class="logo">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="index.php">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="display_all.php">Products</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="./users_area/user_registration.php">Register</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="cart.php"><i class="fa-solid fa-cart-shopping"></i><sup><?php cart_item(); ?></sup></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <!-- calling cart function -->
-        <?php
-        cart();
-        ?>
-        <!-- Second child -->
-        <nav class="navbar navbar-expand-lg bg-secondary navbar-dark">
-            <ul class="navbar-nav me-auto">
-                <?php
-                if (!isset($_SESSION['username'])) {
-                    echo "  <li class='nav-item'>
-                    <a class='nav-link' href='#'>Welcome Guest</a>
-                </li>";
-                } else {
-                    echo "<li class='nav-item'>
-                    <a class='nav-link' href='#'>Welcome " . $_SESSION['username'] . "</a>
-                </li>";
-                }
-                if (!isset($_SESSION['username'])) {
-                    echo " <li class='nav-item'>
-                    <a class='nav-link' href='./users_area/user_login.php'>Login</a>
-                </li>";
-                } else {
-                    echo "<li class='nav-item'>
-                    <a class='nav-link' href='./users_area/logout.php'>Logout</a>
-                </li>";
-                }
-
-                ?>
-            </ul>
-        </nav>
-        <!-- Third child -->
-        <div class="bg-light mb-4">
-            <h3 class="text-center">e-commerce Store</h3>
-            <p class="text-center">Empowering Your Shopping Experience, One Click at a Time</p>
-        </div>
         <!-- fourth child - table -->
         <div class="container">
             <div class="row">
@@ -255,12 +193,7 @@ session_start();
 
         ?>
         <!-- Last child -->
-        <div class="bg-info p-3 text-center">
-            <p>All rights reserved ©- Designed by Utsav-2024</p>
-        </div>
     </div>
     <!-- bootstrap JS link -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
-
-</html>
