@@ -14,7 +14,7 @@
             <tr class="text-center" ng-repeat="category in categories">
                 <td>{{$index + 1}}</td>
                 <td>{{category.category_title}}</td>
-                <td><a href="index.php?edit_category={{category.category_id}}"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                <td><a ng-href="#!/edit_category/{{category.category_id}}"><i class="fa-solid fa-pen-to-square"></i></a></td>
                 <td><a href="#" ng-click="deleteCategory(category.category_id)" ng-confirm-click="Are you sure you want to delete this Category?"><i class="fa-solid fa-trash"></i></a></td>
             </tr>
         </tbody>

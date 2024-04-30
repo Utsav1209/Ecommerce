@@ -5,7 +5,6 @@ if (isset($_GET['user_id'])) {
     $user_id = $_GET['user_id'];
 }
 
-//getting total items and total price of all items
 $get_ip_address = getIPAddress();
 $total_price = 0;
 $cart_query_price = "SELECT * FROM `cart_details` WHERE ip_address='$get_ip_address'";
@@ -24,7 +23,6 @@ while ($row_price = mysqli_fetch_array($result_cart_price)) {
     }
 }
 
-// getting quantity from cart
 $get_cart = "SELECT * FROM `cart_details`";
 $run_cart = mysqli_query($con, $get_cart);
 $get_item_quantity = mysqli_fetch_array($run_cart);

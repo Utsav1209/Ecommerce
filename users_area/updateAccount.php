@@ -1,7 +1,8 @@
 <?php
-include("../includes/connect.php");
 
-if (isset($_SESSION['username']) && isset($_POST['user_update'])) {
+include("../includes/connect.php");
+session_Start();
+if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
     $user_id = $_POST['user_id'];
     $user_email = $_POST['user_email'];

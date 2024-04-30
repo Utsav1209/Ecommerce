@@ -1,7 +1,7 @@
 <?php
 include("../includes/connect.php");
-
 session_start();
+
 if (isset($_SESSION['username'])) {
     $user_session_name = $_SESSION['username'];
     $get_details = "SELECT * FROM `user_table` WHERE username='$user_session_name'";

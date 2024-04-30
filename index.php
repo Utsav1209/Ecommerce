@@ -3,7 +3,6 @@
 include("includes/connect.php");
 include("functions/common_function.php");
 
-
 session_start();
 ?>
 
@@ -57,7 +56,7 @@ session_start();
                         </li>";
                         } else {
                             echo "<li class='nav-item'>
-                            <a class='nav-link' href='./users_area/user_registration.html'>Register</a>
+                            <a class='nav-link' href='#!/user_registration'>Register</a>
                         </li>";
                         }
                         ?>
@@ -68,13 +67,13 @@ session_start();
                             <a class="nav-link" href="#">Total Price:<?php total_cart_price(); ?>/-</a>
                         </li>
                     </ul>
-                    <!-- <form class="d-flex" action="search_product.php" method="get">
+                    <!-- <form class="d-flex" ng-submit="searchProduct()" ng-controller="SearchController">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search_data">
                         <input type="submit" value="search" class="btn btn-outline-light" name="search_data_product">
                     </form> -->
-                    <form class="d-flex" ng-submit="searchProduct()">
+                    <form class="d-flex" ng-submit="searchProduct()" ng-controller="SearchController">
                         <input type="search" class="form-control" ng-model="searchData" placeholder="Search for products..." name="search_data">
-                        <input type="submit" value="search" class="btn btn-outline-light" name="search_data_product">
+                        <button type="submit" class="btn btn-outline-light" name="search_data_product">Search</button>
                     </form>
                 </div>
             </div>
@@ -100,7 +99,8 @@ session_start();
                 if (!isset($_SESSION['username'])) {
                     echo " <li class='nav-item'>
                     <a class='nav-link' href='./users_area/user_login.php'>Login</a>
-                </li>";
+                </li>
+                <li class='nav-item'><a class='nav-link' href='./users_area/user_registration.html'>Sign Up</a></li>";
                 } else {
                     echo "<li class='nav-item'>
                     <a class='nav-link' href='./users_area/logout.php'>Logout</a>
@@ -121,9 +121,7 @@ session_start();
                 <!-- Products -->
                 <div class="row px-1">
                     <div ng-view></div>
-                    <!-- row end -->
                 </div>
-                <!-- column end -->
             </div>
             <div class="col-md-2 bg-secondary p-0" ng-if="!shouldHideFunctions()">
                 <!-- Brands to be display -->
@@ -136,7 +134,7 @@ session_start();
                                 </a>
                             </li>
                             <div ng-repeat="brand in Bnames">
-                                <a href="index.php?brand={{brand.brand_id}}">{{ brand.brand_name }}</a>
+                                <a href="#!/brands/{{brand.brand_id}}">{{ brand.brand_name }}</a>
                             </div>
                         </ul>
                     </div>
@@ -151,7 +149,7 @@ session_start();
                                 </a>
                             </li>
                             <div ng-repeat="category in Cnames">
-                                <a href="index.php?category={{category.category_id}}">{{ category.category_title }}</a>
+                                <a href="#!/category/{{category.category_id}}">{{ category.category_title }}</a>
                             </div>
                         </ul>
                     </div>

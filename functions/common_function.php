@@ -209,7 +209,7 @@ function search_product()
             $category_id = $row['category_id'];
             $brand_id = $row['brand_id'];
 
-            echo "    <div class='col-md-4 mb-2'>
+            echo "<div class='col-md-4 mb-2'>
         <div class='card'>
             <img src='./admin_area/product_images/$product_image1' class='card-img-top' alt='$product_title'>
             <div class='card-body'>
@@ -392,7 +392,7 @@ function get_user_order_details()
                     $row_count = mysqli_num_rows($result_order_query);
                     if ($row_count > 0) {
                         echo "<h3 class='text-center text-success mt-5 mb-2'>You have <span class='text-danger'>$row_count</span> pending orders</h3>
-                        <p class='text-center'><a href='profile.php?my_orders' class='text-dark'>Order details</a></p>";
+                        <p class='text-center'><a href='#!/profile/my_orders' class='text-dark'>Order details</a></p>";
                     } else {
                         echo "<h3 class='text-center text-success mt-5 mb-2'>You have Zero pending orders</h3>
                         <p class='text-center'><a href='../index.php' class='text-dark'>Explore Products</a></p>";

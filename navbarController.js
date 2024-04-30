@@ -7,7 +7,7 @@ app.config(["$routeProvider", function ($routeProvider) {
         }).
         when("/home", {
             templateUrl: "home.php",
-
+            controller: "BrandController"
         }).
         when("/display_all", {
             templateUrl: "display_all.php",
@@ -15,59 +15,309 @@ app.config(["$routeProvider", function ($routeProvider) {
         when("/profile", {
             templateUrl: "./users_area/profile.php",
         }).
-        when("/edit_account", {
+        when("/profile/edit_account", {
             templateUrl: "./users_area/edit_account.php",
             controller: "EditAccountController"
         }).
-        when("/my_orders", {
+        when("/profile/my_orders", {
             templateUrl: "./users_area/user_orders.php",
+            controller: "getOrder",
         }).
-        when("/delete_account", {
+        when("/profile/delete_account", {
             templateUrl: "./users_area/delete_account.php",
+        }).
+        when("/user_registration", {
+            templateUrl: "./users_area/user_registration.html",
+        }).
+        when("/users_area/user_login", {
+            templateUrl: "./users_area/user_login.php",
+        }).
+        when("index", {
+            templateUrl: "index.php",
+        }).
+        otherwise({
+            redirectTo: "/home"
+        }).
+        when("/view_products", {
+            templateUrl: "view_products.php",
+        }).
+        when("/insert_product", {
+            templateUrl: "insert_product.php",
+        }).
+        when("/insert_categories", {
+            templateUrl: "insert_categories.php",
+        }).
+        when("/view_categories", {
+            templateUrl: "view_categories.php",
+        }).
+        when("/insert_brand", {
+            templateUrl: "insert_brands.php",
+        }).
+        when("/view_brand", {
+            templateUrl: "view_brands.php",
+        }).
+        when("/list_orders", {
+            templateUrl: "list_orders.php",
+        }).
+        when("/list_payments", {
+            templateUrl: "list_payments.php",
+        }).
+        when("/list_users", {
+            templateUrl: "list_users.php",
+        }).
+        when("/admin_logout", {
+            templateUrl: "admin_logout.php",
+        }).
+        when("/edit_category/:categoryId", {
+            templateUrl: "edit_category.php",
+            controller: "editCategory"
+        }).
+        when("/edit_brands/:brandId", {
+            templateUrl: "edit_brands.php",
+            controller: "editBrands"
+        }).
+        when("/edit_products/:productId", {
+            templateUrl: "edit_products.php",
+            controller: "editProducts"
+        }).
+        when("/admin_login", {
+            templateUrl: "admin_login.php",
+        }).
+        when("/brands/:brandId", {
+            templateUrl: "getUniqueBrand.php",
+            controller: "BrandDetailsController"
+        }).
+        when("/category/:categoryId", {
+            templateUrl: "getUniqueCat.php",
+            controller: "CategoryController"
+        }).
+        when("/search", {
+            templateUrl: "search_product.php",
+            controller: "SearchController",
         })
-
-
 }]);
-app.controller('getOrder', function ($scope, $http) {
-    $scope.loading = true;
-    $scope.error = '';
 
-    $http.get('getOrders.php')
+app.controller('SearchController', function ($scope, $http) {
+    $scope.searchData = '';
+    $scope.products = [];
+    $scope.noProductMessage = '';
+    $scope.searchProduct = function () {
+        $http.get('searchProduct.php', {
+            params: { search_data_product: $scope.searchData }
+        })
+            .then(function (response) {
+                console.log(response);
+                $scope.products = JSON.parse(response.data);
+                console.log($scope.products);
+                if ($scope.products.length === 0) {
+                    $scope.noProductMessage = "No product found for this search!";
+                } else {
+                    $scope.noProductMessage = "";
+                }
+            })
+            .catch(function (error) {
+                console.log('Error searching products:', error);
+            });
+    };
+});
+
+app.controller('BrandDetailsController', function ($scope, $http, $routeParams) {
+    $http.get('get_products_by_brand.php', {
+        params: { brand: $routeParams.brandId }
+    })
         .then(function (response) {
-            $scope.loading = false;
-            $scope.orders = response.data;
-            console.log(orders.order_status)
+            $scope.products = response.data;
         })
         .catch(function (error) {
-            $scope.loading = false;
-            $scope.error = 'Error fetching orders: ' + error.statusText;
+            console.log('Error fetching products by brand:', error);
         });
 });
 
-app.controller('EditAccountController', function ($scope, $http) {
 
+app.controller('CategoryController', function ($scope, $http, $routeParams) {
+    // Fetch products based on category ID
+    $http.get('get_products_by_category.php', {
+        params: { category: $routeParams.categoryId }
+    })
+        .then(function (response) {
+            // Assign fetched products to scope variable
+            $scope.products = response.data;
+        })
+        .catch(function (error) {
+            console.log('Error fetching products by category:', error);
+        });
+});
+
+app.controller('editProducts', function ($scope, $http, $routeParams) {
+    $scope.formData = {};
+    var productId = $routeParams.productId;
+    $scope.fetchProductData = function (productId) {
+        $http.get('fetchProductData.php?product_id=' + productId)
+            .then(function (response) {
+                $scope.formData = response.data;
+                $scope.formData.product_price = parseFloat($scope.formData.product_price);
+            })
+            .catch(function (error) {
+                console.error('Error fetching product data:', error);
+            });
+    };
+
+    $scope.fetchProductData(productId);
+
+    $scope.editProduct = function () {
+        var formData = new FormData();
+        formData.append('product_title', $scope.formData.product_title);
+        formData.append('product_description', $scope.formData.product_description);
+        formData.append('product_keywords', $scope.formData.product_keywords);
+        formData.append('category_id', $scope.formData.category_id);
+        formData.append('brand_id', $scope.formData.brand_id);
+        formData.append('product_price', $scope.formData.product_price.toString());
+        formData.append('product_image1', $scope.formData.product_image1);
+        formData.append('product_id', $scope.formData.product_id);
+
+        $http.post('editProduct.php', formData, {
+            transformRequest: angular.identity,
+            headers: { 'Content-Type': undefined }
+        }).then(function (response) {
+            console.log(response.data);
+            alert('Product updated successfully');
+            window.location.href = 'index.php?view_products';
+        }).catch(function (error) {
+            console.error('Error updating product:', error);
+            alert('An error occurred while updating the product.');
+        });
+    };
+});
+
+
+app.controller('editBrands', function ($scope, $http, $routeParams) {
+    $scope.formData = {};
+
+    var brandId = $routeParams.brandId;
+
+    $http.get('fetchBrandData.php?edit_brands=' + brandId)
+        .then(function (response) {
+            $scope.formData = response.data;
+        })
+        .catch(function (error) {
+            console.error('Error fetching brand data:', error);
+        });
+
+    $scope.editBrand = function () {
+        $http.post('editBrand.php', { brand_id: brandId, brand_name: $scope.formData.brand_name })
+            .then(function (response) {
+                if (response.data.success) {
+                    alert('Brand updated successfully');
+                    window.location.href = './index.php?view_brands';
+                } else {
+                    alert('Error updating brand');
+                }
+            })
+            .catch(function (error) {
+                console.error('Error updating brand:', error);
+                alert('An error occurred while updating the brand.');
+            });
+    };
+});
+
+app.controller('editCategory', function ($scope, $http, $routeParams) {
+    $scope.formData = {};
+
+    var categoryId = $routeParams.categoryId;
+
+
+    $http.get('fetchCategoryData.php?edit_category=' + categoryId)
+        .then(function (response) {
+            console.log('fetch:', response.data);
+            $scope.formData = response.data;
+        })
+        .catch(function (error) {
+            console.error('Error fetching category data:', error);
+        });
+    $scope.editCategory = function () {
+        console.log('edited title', $scope.formData.category_title);
+        $http.post('editCategory.php', { category_id: categoryId, category_title: $scope.formData.category_title })
+            .then(function (response) {
+                console.log('response', response.data);
+                if (response.data.success) {
+                    alert('Category updated successfully');
+                    window.location.href = './index.php?view_categories';
+                } else {
+                    alert('Error updating category');
+                }
+            })
+            .catch(function (error) {
+                console.error('Error updating category:', error);
+                alert('An error occurred while updating the category.');
+            });
+    };
+});
+
+app.controller('getOrder', function ($scope, $http) {
+    $scope.fetchUserOrders = function () {
+        $http.get('users_area/getOrders.php')
+            .then(function (response) {
+                $scope.loading = false;
+                $scope.orders = response.data;
+            })
+            .catch(function (error) {
+                $scope.loading = false;
+                $scope.error = 'Error fetching orders: ' + error.statusText;
+            });
+    };
+
+    $scope.fetchUserOrders();
+});
+
+app.controller('EditAccountController', function ($scope, $http) {
+    $scope.formData = {};
+    $scope.updateSuccess = false; // Initialize updateSuccess variable
+
+    // Fetch user details
+    $scope.fetchUserDetails = function () {
+        $http.get('users_area/getUserData.php')
+            .then(function (response) {
+                $scope.formData = response.data;
+            })
+            .catch(function (error) {
+                console.error('Error fetching user details:', error);
+            });
+    };
+
+    // Call fetchUserDetails function when the controller loads
+    $scope.fetchUserDetails();
+
+    // Update account function
     $scope.updateAccount = function () {
         var formData = new FormData();
         angular.forEach($scope.formData, function (value, key) {
             formData.append(key, value);
         });
 
-        $http.post('updateAccount.php', formData, {
+        // Include user_id in the form data
+        formData.append('user_id', $scope.formData.user_id);
+
+        $http.post('users_area/updateAccount.php', formData, {
             transformRequest: angular.identity,
             headers: {
                 'Content-Type': undefined
             }
         })
             .then(function (response) {
-                $scope.updateSuccess = true;
-                console.log('Account updated successfully');
+                // Check response from server
+                if (response.data.success) {
+                    $scope.updateSuccess = true; // Set updateSuccess to true if update is successful
+                    console.log('Account updated successfully');
+                } else {
+                    console.error('Error updating account:', response.data.error);
+                }
             })
             .catch(function (error) {
                 console.error('Error updating account:', error);
             });
     };
-
 });
+
 
 app.controller('BrandController', function ($scope, $http, $location) {
     $scope.getPendingOrders = function () {
@@ -84,21 +334,21 @@ app.controller('BrandController', function ($scope, $http, $location) {
             });
     };
 
-    var hideFunctionPaths = ['/profile', '/edit_account', '/my_orders', '/delete_account', '/cart'];
+    var hideFunctionPaths = ['/profile', '/profile/edit_account', '/profile/my_orders', '/profile/delete_account', '/cart'];
 
     $scope.shouldHideFunctions = function () {
         var currentPath = $location.path();
         return hideFunctionPaths.includes(currentPath);
     };
 
-    // Call the function when the controller loads
+
     $scope.getPendingOrders();
 
 
     $scope.fetchBrands = function () {
         $http.get('getBrands.php')
             .then(function (response) {
-                // Extract the data from the response
+
                 $scope.Bnames = response.data;
             })
             .catch(function (error) {
@@ -110,7 +360,7 @@ app.controller('BrandController', function ($scope, $http, $location) {
     $scope.fetchCategories = function () {
         $http.get('getCategory.php')
             .then(function (response) {
-                // Extract the data from the response
+
                 $scope.Cnames = response.data;
             })
             .catch(function (error) {
@@ -120,7 +370,7 @@ app.controller('BrandController', function ($scope, $http, $location) {
 
     $scope.products = [];
 
-    // Function to fetch all products
+
     $scope.getAllProducts = function () {
         $http.get('getProducts.php')
             .then(function (response) {
@@ -131,32 +381,32 @@ app.controller('BrandController', function ($scope, $http, $location) {
             });
     };
 
-    // Fetch all products when the controller loads
+
     $scope.getAllProducts();
 
 
-    $scope.searchData = '';
-    $scope.products = [];
+    // $scope.searchData = '';
+    // $scope.products = [];
 
-    // // Function to search for products
-    $scope.searchProduct = function () {
-        $http.get('searchProduct.php', {
-            params: { search_data: $scope.searchData }
-        })
-            .then(function (response) {
-                console.log($scope.searchData)
-                $scope.searchproducts = response.data;
-                if ($scope.searchproducts.length === 0) {
-                    $scope.noProductMessage = "No product found for this search!";
-                } else {
-                    $scope.noProductMessage = "";
-                }
-                window.location.href = 'search_product.php?search_data=' + $scope.searchData;
-            })
-            .catch(function (error) {
-                console.log('Error searching products:', error);
-            });
-    };
+
+    // $scope.searchProduct = function () {
+    //     $http.get('searchProduct.php', {
+    //         params: { search_data: $scope.searchData }
+    //     })
+    //         .then(function (response) {
+    //             console.log($scope.searchData)
+    //             $scope.searchproducts = response.data;
+    //             if ($scope.searchproducts.length === 0) {
+    //                 $scope.noProductMessage = "No product found for this search!";
+    //             } else {
+    //                 $scope.noProductMessage = "";
+    //             }
+    //             window.location.href = 'search_product.php?search_data=' + $scope.searchData;
+    //         })
+    //         .catch(function (error) {
+    //             console.log('Error searching products:', error);
+    //         });
+    // };
 
 
     $scope.user = {};
@@ -178,7 +428,7 @@ app.controller('BrandController', function ($scope, $http, $location) {
             .then(function (response) {
                 console.log(response.data);
                 alert('Registered Successfully');
-                window.location.href = './user_login.html';
+                window.location.href = './user_login.php';
             })
             .catch(function (error) {
                 console.error('Error registering user:', error);
@@ -200,9 +450,9 @@ app.controller('BrandController', function ($scope, $http, $location) {
                 if (response.data.success) {
                     alert('Login Successful');
                     if (response.data.hasItemsInCart) {
-                        window.location.href = 'payment.php';
+                        window.location.href = 'http://localhost/Ecommerce%20Website%20-%20Angularjs/#!/home';
                     } else {
-                        window.location.href = 'profile.php';
+                        window.location.href = 'http://localhost/Ecommerce%20Website%20-%20Angularjs/#!/home';
                     }
                 } else {
                     alert('Invalid Credentials');
@@ -237,20 +487,6 @@ app.controller('BrandController', function ($scope, $http, $location) {
             console.error('Error fetching user data:', error);
         });
 
-    $scope.loading = true;
-    $scope.error = '';
-
-    $http.get('getOrders.php')
-        .then(function (response) {
-            $scope.loading = false;
-            $scope.orders = response.data;
-            console.log(orders.order_status)
-        })
-        .catch(function (error) {
-            $scope.loading = false;
-            $scope.error = 'Error fetching orders: ' + error.statusText;
-        });
-
     $scope.fetchCategories2 = function () {
         $http.get('getAdCategories.php')
             .then(function (response) {
@@ -274,7 +510,7 @@ app.controller('BrandController', function ($scope, $http, $location) {
 
                     alert('Category has been deleted successfully');
 
-                    $scope.fetchCategories();
+                    $scope.fetchCategories2();
                 })
                 .catch(function (error) {
 
@@ -317,14 +553,14 @@ app.controller('BrandController', function ($scope, $http, $location) {
     };
 
 
-    $scope.brandName = ''; // Initialize brandName variable
+    $scope.brandName = '';
 
     $scope.insertBrand = function () {
         var brandName = $scope.brandName;
         $http.post('insertBrand.php', { brand_name: brandName })
             .then(function (response) {
                 alert('Brand has been inserted successfully');
-                $scope.brandName = ''; // Clear the input field
+                $scope.brandName = '';
             })
             .catch(function (error) {
                 console.log('Error inserting brand:', error);
@@ -350,7 +586,6 @@ app.controller('BrandController', function ($scope, $http, $location) {
     };
 
     $scope.orders = [];
-    // Function to fetch orders
     $scope.fetchOrders = function () {
         $http.get('fetchOrders.php')
             .then(function (response) {
@@ -361,13 +596,12 @@ app.controller('BrandController', function ($scope, $http, $location) {
             });
     };
 
-    // Function to confirm and delete an order
     $scope.confirmDelete = function (orderId) {
         if (confirm("Are you sure you want to delete this order?")) {
             $http.get('deleteOrder.php', { params: { order_id: orderId } })
                 .then(function (response) {
                     alert('Order deleted successfully');
-                    $scope.fetchOrders(); // Refresh orders after deletion
+                    $scope.fetchOrders();
                 })
                 .catch(function (error) {
                     console.error('Error deleting order:', error);
@@ -376,7 +610,6 @@ app.controller('BrandController', function ($scope, $http, $location) {
         }
     };
 
-    // Fetch orders initially
     $scope.fetchOrders();
 
     $scope.fetchPayments = function () {
@@ -421,7 +654,7 @@ app.controller('BrandController', function ($scope, $http, $location) {
             $http.get('deleteUser.php', { params: { user_id: userId } })
                 .then(function (response) {
                     alert('User has been deleted successfully');
-                    $scope.fetchUsers(); // Refresh users after deletion
+                    $scope.fetchUsers();
                 })
                 .catch(function (error) {
                     console.log('Error deleting user:', error);
@@ -510,49 +743,6 @@ app.controller('BrandController', function ($scope, $http, $location) {
             });
     };
 
-    $scope.formData = {};
-    $scope.fetchProductData = function (productId) {
-        $http.get('fetchProductData.php?product_id=' + productId)
-            .then(function (response) {
-                $scope.formData = response.data;
-                $scope.formData.product_price = parseFloat($scope.formData.product_price);
-                console.log("Fetched Product Data: ", $scope.formData);
-            })
-            .catch(function (error) {
-                console.error('Error fetching product data:', error);
-            });
-    };
-
-    var urlParams = new URLSearchParams(window.location.search);
-    var productId = urlParams.get('edit_products');
-    console.log('Product', productId);
-    $scope.fetchProductData(productId);
-
-    $scope.timestamp = new Date().getTime();
-
-    $scope.editProduct = function () {
-        var formData = new FormData();
-        formData.append('product_title', $scope.formData.product_title);
-        formData.append('product_description', $scope.formData.product_description);
-        formData.append('product_keywords', $scope.formData.product_keywords);
-        formData.append('category_id', $scope.formData.category_id);
-        formData.append('brand_id', $scope.formData.brand_id);
-        formData.append('product_price', $scope.formData.product_price.toString());
-        formData.append('product_image1', $scope.formData.product_image1);
-        formData.append('product_id', $scope.formData.product_id);
-        $http.post('editProduct.php', formData, {
-            transformRequest: angular.identity,
-            headers: { 'Content-Type': undefined }
-        }).then(function (response) {
-            console.log(response.data);
-            alert('Product updated successfully');
-            window.location.href = 'index.php?view_products';
-        }).catch(function (error) {
-            console.error('Error updating product:', error);
-            alert('An error occurred while updating the product.');
-        });
-    };
-
 
     // $scope.fetchBrandData = function () {
     //     $http.get('./admin_area/fetchBrandData.php')
@@ -565,75 +755,6 @@ app.controller('BrandController', function ($scope, $http, $location) {
     // };
 
     // $scope.fetchBrandData();
-
-    $scope.formData = {};
-    $scope.fetchCategoryData = function (categoryId) {
-        $http.get('fetchCategoryData.php?edit_category=' + categoryId)
-            .then(function (response) {
-                console.log('fetch:', response.data);
-                $scope.formData = response.data;
-            })
-            .catch(function (error) {
-                console.error('Error fetching category data:', error);
-            });
-    };
-
-    var urlParams = new URLSearchParams(window.location.search);
-    var categoryId = urlParams.get('edit_category');
-    $scope.fetchCategoryData(categoryId);
-
-    // Update category
-    $scope.editCategory = function () {
-        console.log('edited title', $scope.formData.category_title);
-        $http.post('editCategory.php', { category_id: categoryId, category_title: $scope.formData.category_title })
-            .then(function (response) {
-                console.log('response', response.data);
-                if (response.data.success) {
-                    alert('Category updated successfully');
-                    window.location.href = './index.php?view_categories';
-                } else {
-                    alert('Error updating category');
-                }
-            })
-            .catch(function (error) {
-                console.error('Error updating category:', error);
-                alert('An error occurred while updating the category.');
-            });
-    };
-
-
-    $scope.formData = {};
-    $scope.fetchBrandData = function (brandId) {
-        $http.get('fetchBrandData.php?edit_brands=' + brandId)
-            .then(function (response) {
-                $scope.formData = response.data;
-            })
-            .catch(function (error) {
-                console.error('Error fetching brand data:', error);
-            });
-    };
-
-    var urlParams = new URLSearchParams(window.location.search);
-    var brandId = urlParams.get('edit_brands');
-    console.log('Brand', brandId);
-    $scope.fetchBrandData(brandId);
-
-    $scope.editBrand = function () {
-        $http.post('editBrand.php', { brand_id: brandId, brand_name: $scope.formData.brand_name })
-            .then(function (response) {
-                console.log(response);
-                if (response.data.success) {
-                    alert('Brand updated successfully');
-                    window.location.href = './index.php?view_brands';
-                } else {
-                    alert('Error updating brand');
-                }
-            })
-            .catch(function (error) {
-                console.error('Error updating brand:', error);
-                alert('An error occurred while updating the brand.');
-            });
-    };
 
 
     $scope.adlogin = function () {

@@ -16,6 +16,7 @@ session_start();
     <!-- CSS file -->
     <link rel="stylesheet" href="../style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.js"></script>
     <script src="../navbarController.js"></script>
 
     <style>
@@ -56,28 +57,26 @@ session_start();
             $row_image = mysqli_fetch_array($result_image);
             $user_image = $row_image["user_image"];
             echo "  <li class='nav-item'>
-                    <img src='./user_images/$user_image' alt='' class='profile_img my-4'>
+                    <img src='./user_images/$user_image' alt='Profile Photo' class='profile_img my-4'>
                 </li>";
-
             ?>
-
             <li class="nav-item">
                 <a class="nav-link text-light" href="#!/profile">
                     Pending orders
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-light" href="#!edit_account">
+                <a class="nav-link text-light" href="#!/profile/edit_account">
                     Edit Account
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-light" href="#!my_orders">
+                <a class="nav-link text-light" href="#!/profile/my_orders">
                     My orders
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-light" href="#!/delete_account">
+                <a class="nav-link text-light" href="#!/profile/delete_account">
                     Delete Account
                 </a>
             </li>
@@ -91,16 +90,6 @@ session_start();
     <div class="col-md-10 text-center">
         <?php
         get_user_order_details();
-        if (isset($_GET['my_orders'])) {
-            include('user_orders.php');
-        }
-        if (isset($_GET['edit_account'])) {
-            include('edit_account.php');
-        }
-        if (isset($_GET['delete_account'])) {
-            include('delete_account.php');
-        }
-
         ?>
     </div>
 </div>

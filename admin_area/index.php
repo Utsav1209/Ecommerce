@@ -11,7 +11,7 @@ include("../functions/common_function.php");
 ?>
 
 <!DOCTYPE html>
-<html lang="en" ng-app="ecommerceApp">
+<html lang="en" ng-app="ecommerceApp" ng-controller="BrandController">
 
 <head>
     <meta charset="UTF-8">
@@ -25,6 +25,7 @@ include("../functions/common_function.php");
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="../style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.js"></script>
     <script src="../navbarController.js"></script>
     <style>
         .admin_image {
@@ -49,7 +50,7 @@ include("../functions/common_function.php");
     </style>
 </head>
 
-<body ng-controller="BrandController">
+<body>
     <!-- navbar -->
     <div class="container-fluid p-0">
         <!-- First child -->
@@ -90,77 +91,37 @@ include("../functions/common_function.php");
                     <p class="text-light text-center">Admin Name</p>
                 </div>
                 <div class="button text-center">
-                    <button class="my-3"><a href="index.php?insert_product" class="nav-link text-light bg-info my-1">Insert Product</a></button>
-                    <button><a href="index.php?view_products" class="nav-link text-light bg-info my-1">View Product</a></button>
-                    <button><a href="index.php?insert_category" class="nav-link text-light bg-info my-1">Insert Categories</a></button>
-                    <button><a href="index.php?view_categories" class="nav-link text-light bg-info my-1">View Categories</a></button>
-                    <button><a href="index.php?insert_brand" class="nav-link text-light bg-info my-1">Insert Brands</a></button>
-                    <button><a href="index.php?view_brands" class="nav-link text-light bg-info my-1">View Brands</a></button>
-                    <button><a href="index.php?list_orders" class="nav-link text-light bg-info my-1">All Orders</a></button>
-                    <button><a href="index.php?list_payments" class="nav-link text-light bg-info my-1">All Payments</a></button>
-                    <button><a href="index.php?list_users" class="nav-link text-light bg-info my-1">List Users</a></button>
-                    <button><a href="index.php?admin_logout" class="nav-link text-light bg-info my-1">Logout</a></button>
+                    <button><a href="#!/insert_product" class="nav-link text-light bg-info my-1">Insert Product</a></button>
+                    <button><a href="#!/view_products" class="nav-link text-light bg-info my-1">View Product</a></button>
+                    <button><a href="#!/insert_categories" class="nav-link text-light bg-info my-1">Insert Categories</a></button>
+                    <button><a href="#!/view_categories" class="nav-link text-light bg-info my-1">View Categories</a></button>
+                    <button><a href="#!/insert_brand" class="nav-link text-light bg-info my-1">Insert Brands</a></button>
+                    <button><a href="#!/view_brand" class="nav-link text-light bg-info my-1">View Brands</a></button>
+                    <button><a href="#!/list_orders" class="nav-link text-light bg-info my-1">All Orders</a></button>
+                    <button><a href="#!/list_payments" class="nav-link text-light bg-info my-1">All Payments</a></button>
+                    <button><a href="#!/list_users" class="nav-link text-light bg-info my-1">List Users</a></button>
+                    <button><a href="#!/admin_logout" class="nav-link text-light bg-info my-1">Logout</a></button>
                 </div>
             </div>
         </div>
 
 
         <!-- Fourth child -->
+
         <div class="container my-3">
+            <div ng-view></div>
             <?php
-            if (isset($_GET['insert_product'])) {
-                include('insert_product.php');
-            }
-            if (isset($_GET['insert_category'])) {
-                include('insert_categories.php');
-            }
-            if (isset($_GET['insert_brand'])) {
-                include('insert_brands.php');
-            }
-            if (isset($_GET['view_products'])) {
-                include('view_products.php');
-            }
-            if (isset($_GET['edit_products'])) {
-                include('edit_products.php');
-            }
             if (isset($_GET['delete_products'])) {
                 include('delete_products.php');
-            }
-            if (isset($_GET['view_categories'])) {
-                include('view_categories.php');
-            }
-            if (isset($_GET['view_brands'])) {
-                include('view_brands.php');
-            }
-            if (isset($_GET['edit_category'])) {
-                include('edit_category.php');
-            }
-            if (isset($_GET['edit_brands'])) {
-                include('edit_brands.php');
-            }
-            if (isset($_GET['delete_category'])) {
-                include('deleteCategories.php');
             }
             if (isset($_GET['delete_brands'])) {
                 include('deleteBrand.php');
             }
-            if (isset($_GET['list_orders'])) {
-                include('list_orders.php');
-            }
-            if (isset($_GET['list_payments'])) {
-                include('list_payments.php');
-            }
             if (isset($_GET['delete_payment'])) {
                 include('delete_payment.php');
             }
-            if (isset($_GET['list_users'])) {
-                include('list_users.php');
-            }
             if (isset($_GET['delete_user'])) {
                 include('delete_user.php');
-            }
-            if (isset($_GET['admin_logout'])) {
-                include('admin_logout.php');
             }
             if (isset($_GET['admin_login'])) {
                 include('admin_login.php');

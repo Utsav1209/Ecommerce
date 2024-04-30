@@ -15,6 +15,10 @@ session_start();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- CSS file -->
     <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.js"></script>
+
+    <script src="navbarController.js"></script>
     <style>
         .cart_img {
             width: 80px;
@@ -37,15 +41,13 @@ session_start();
                         }
                     });
 
-                    // If no checkbox is checked, prevent the default action and show a message
                     if (!atLeastOneChecked) {
                         alert('Please select at least one item to remove from the cart.');
-                        event.preventDefault(); // Prevent the default action (form submission)
+                        event.preventDefault();
                     } else {
-                        // Otherwise, show the confirmation message
                         const confirmed = confirm('Are you sure you want to remove the selected item(s) from the cart?');
                         if (!confirmed) {
-                            event.preventDefault(); // Prevent the default action if the user cancels
+                            event.preventDefault();
                         }
                     }
                 });
@@ -161,7 +163,8 @@ session_start();
                         }
 
                         if (isset($_POST["continue_shopping"])) {
-                            echo "<script>window.open('index.php','_self')</script>";
+                            header("Location: index.php");
+                            exit();
                         }
 
                         ?>
@@ -170,9 +173,6 @@ session_start();
                 </form>
             </div>
         </div>
-
-
-        <!-- fuction to remove items -->
 
         <?php
         function remove_cart_item()

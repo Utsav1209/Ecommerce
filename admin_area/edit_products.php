@@ -1,4 +1,4 @@
-<div class="container mt-5" ng-app="ecommerceApp" ng-controller="BrandController">
+<div class="container mt-5" ng-app="ecommerceApp" ng-controller="editProducts">
     <h1 class="text-center">Edit Products</h1>
     <form ng-submit="editProduct()" enctype="multipart/form-data">
         <div class="form-outline w-50 m-auto mb-4">

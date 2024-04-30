@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         // Move the uploaded file only if it exists
         if (!empty($product_image1)) {
-            move_uploaded_file($temp_image1, "./product_images/$product_image1");
+            move_uploaded_file($temp_image1, "./admin_area/product_images/$product_image1");
         }
 
         $update_product = "UPDATE `products` SET product_title=?, product_description=?, product_keywords=?, category_id=?, brand_id=?, product_image1=?, product_price=?, date=NOW() WHERE product_id=?";
