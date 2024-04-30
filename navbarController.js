@@ -26,7 +26,7 @@ app.config(["$routeProvider", function ($routeProvider) {
         when("/profile/delete_account", {
             templateUrl: "./users_area/delete_account.php",
         }).
-        when("/user_registration", {
+        when("/users_area/user_registration", {
             templateUrl: "./users_area/user_registration.html",
         }).
         when("/users_area/user_login", {
@@ -107,7 +107,7 @@ app.controller('SearchController', function ($scope, $http) {
         })
             .then(function (response) {
                 console.log(response);
-                $scope.products = JSON.parse(response.data);
+                $scope.products = response.data;
                 console.log($scope.products);
                 if ($scope.products.length === 0) {
                     $scope.noProductMessage = "No product found for this search!";
@@ -320,6 +320,10 @@ app.controller('EditAccountController', function ($scope, $http) {
 
 
 app.controller('BrandController', function ($scope, $http, $location) {
+    $scope.isLoginPage = function () {
+        console.log($location.path())
+        return $location.path() === '/users_area/user_login';
+    };
     $scope.getPendingOrders = function () {
         $http.get('userProfile.php')
             .then(function (response) {
@@ -334,7 +338,7 @@ app.controller('BrandController', function ($scope, $http, $location) {
             });
     };
 
-    var hideFunctionPaths = ['/profile', '/profile/edit_account', '/profile/my_orders', '/profile/delete_account', '/cart'];
+    var hideFunctionPaths = ['/profile', '/profile/edit_account', '/profile/my_orders', '/profile/delete_account', '/cart', '/users_area/user_registration', '/users_area/user_login'];
 
     $scope.shouldHideFunctions = function () {
         var currentPath = $location.path();
@@ -450,9 +454,9 @@ app.controller('BrandController', function ($scope, $http, $location) {
                 if (response.data.success) {
                     alert('Login Successful');
                     if (response.data.hasItemsInCart) {
-                        window.location.href = 'http://localhost/Ecommerce%20Website%20-%20Angularjs/#!/home';
+                        window.location.href = 'http://localhost/Ecommerce/#!/home';
                     } else {
-                        window.location.href = 'http://localhost/Ecommerce%20Website%20-%20Angularjs/#!/home';
+                        window.location.href = 'http://localhost/Ecommerce/#!/home';
                     }
                 } else {
                     alert('Invalid Credentials');
@@ -826,8 +830,3 @@ app.controller('BrandController', function ($scope, $http, $location) {
             });
     };
 });
-
-
-
-
-

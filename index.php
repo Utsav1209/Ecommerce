@@ -35,7 +35,7 @@ session_start();
     <!-- navbar -->
     <div class="container-fluid p-0" ng-controller="BrandController">
         <!-- first child -->
-        <nav class="navbar navbar-expand-lg bg-info navbar-light">
+        <nav class="navbar navbar-expand-lg bg-info navbar-light" ng-hide="isLoginPage()">
             <div class="container-fluid">
                 <img src="./Images/img1.png" alt="" class="logo">
                 <button class="navbar-toggler" type="button" ng-click="toggleNavbar()">
@@ -83,7 +83,7 @@ session_start();
         cart();
         ?>
         <!-- Second child -->
-        <nav class="navbar navbar-expand-lg bg-secondary navbar-dark">
+        <nav class="navbar navbar-expand-lg bg-secondary navbar-dark" ng-hide="isLoginPage()">
             <ul class="navbar-nav me-auto">
 
                 <?php
@@ -98,9 +98,9 @@ session_start();
                 }
                 if (!isset($_SESSION['username'])) {
                     echo " <li class='nav-item'>
-                    <a class='nav-link' href='./users_area/user_login.php'>Login</a>
+                    <a class='nav-link' href='#!/users_area/user_login'>Login</a>
                 </li>
-                <li class='nav-item'><a class='nav-link' href='./users_area/user_registration.html'>Sign Up</a></li>";
+                <li class='nav-item'><a class='nav-link' href='#!/users_area/user_registration'>Sign Up</a></li>";
                 } else {
                     echo "<li class='nav-item'>
                     <a class='nav-link' href='./users_area/logout.php'>Logout</a>
@@ -123,7 +123,7 @@ session_start();
                     <div ng-view></div>
                 </div>
             </div>
-            <div class="col-md-2 bg-secondary p-0" ng-if="!shouldHideFunctions()">
+            <div class="col-md-2 bg-secondary p-0" ng-if="!shouldHideFunctions() && !isLoginPage()">
                 <!-- Brands to be display -->
                 <div ng-if="!shouldHideFunctions()">
                     <div ng-init="fetchBrands()">
