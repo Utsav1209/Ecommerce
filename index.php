@@ -35,7 +35,7 @@ session_start();
     <!-- navbar -->
     <div class="container-fluid p-0" ng-controller="BrandController">
         <!-- first child -->
-        <nav class="navbar navbar-expand-lg bg-info navbar-light">
+        <nav class="navbar navbar-expand-lg bg-info navbar-light" ng-hide="isLoginPage()">
             <div class="container-fluid">
                 <img src="./Images/img1.png" alt="" class="logo">
                 <button class="navbar-toggler" type="button" ng-click="toggleNavbar()">
@@ -83,7 +83,7 @@ session_start();
         cart();
         ?>
         <!-- Second child -->
-        <nav class="navbar navbar-expand-lg bg-secondary navbar-dark">
+        <nav class="navbar navbar-expand-lg bg-secondary navbar-dark" ng-hide="isLoginPage()">
             <ul class="navbar-nav me-auto">
 
                 <?php
@@ -98,7 +98,7 @@ session_start();
                 }
                 if (!isset($_SESSION['username'])) {
                     echo " <li class='nav-item'>
-                    <a class='nav-link' href='./users_area/user_login.php'>Login</a>
+                    <a class='nav-link' href='#!/users_area/user_login'>Login</a>
                 </li>
                 <li class='nav-item'><a class='nav-link' href='./users_area/user_registration.html'>Sign Up</a></li>";
                 } else {
@@ -116,14 +116,14 @@ session_start();
             <p class="text-center">Empowering Your Shopping Experience, One Click at a Time</p>
         </div>
         <!-- Fourth child -->
-        <div class="row">
+        <div class="row" >
             <div class="col-md-10">
                 <!-- Products -->
                 <div class="row px-1">
                     <div ng-view></div>
                 </div>
             </div>
-            <div class="col-md-2 bg-secondary p-0" ng-if="!shouldHideFunctions()">
+            <div class="col-md-2 bg-secondary p-0" ng-if="!shouldHideFunctions() && !isLoginPage()">
                 <!-- Brands to be display -->
                 <div ng-if="!shouldHideFunctions()">
                     <div ng-init="fetchBrands()">

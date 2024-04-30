@@ -32,7 +32,7 @@
                     </div>
                     <div class="mt-4 pt-2">
                         <input type="submit" value="Login" class="bg-info py-2 px-3 border-0">
-                        <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="user_registration.html" class="text-danger text-decoration-none">Signup</a></p>
+                        <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="users_area/user_registration.html" class="text-danger text-decoration-none">Signup</a></p>
                     </div>
                 </form>
             </div>

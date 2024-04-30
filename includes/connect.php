@@ -1,6 +1,6 @@
 <?php
 
-$con = mysqli_connect("localhost", "root", "Utsav!@#456", "mystore");
+$con = mysqli_connect("localhost", "root", "", "mystore");
 if (!$con) {
     die(mysqli_error($con));
 }

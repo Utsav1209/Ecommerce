@@ -107,7 +107,7 @@ app.controller('SearchController', function ($scope, $http) {
         })
             .then(function (response) {
                 console.log(response);
-                $scope.products = JSON.parse(response.data);
+                $scope.products = response.data;
                 console.log($scope.products);
                 if ($scope.products.length === 0) {
                     $scope.noProductMessage = "No product found for this search!";
@@ -320,6 +320,10 @@ app.controller('EditAccountController', function ($scope, $http) {
 
 
 app.controller('BrandController', function ($scope, $http, $location) {
+    $scope.isLoginPage = function() {
+        console.log($location.path())
+        return $location.path() === '/users_area/user_login'; // Adjust the path as per your actual route
+    };
     $scope.getPendingOrders = function () {
         $http.get('userProfile.php')
             .then(function (response) {
@@ -450,9 +454,9 @@ app.controller('BrandController', function ($scope, $http, $location) {
                 if (response.data.success) {
                     alert('Login Successful');
                     if (response.data.hasItemsInCart) {
-                        window.location.href = 'http://localhost/Ecommerce%20Website%20-%20Angularjs/#!/home';
+                        window.location.href = 'http://localhost/Ecommerce/#!/home';
                     } else {
-                        window.location.href = 'http://localhost/Ecommerce%20Website%20-%20Angularjs/#!/home';
+                        window.location.href = 'http://localhost/Ecommerce/#!/home';
                     }
                 } else {
                     alert('Invalid Credentials');
