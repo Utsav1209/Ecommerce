@@ -24,9 +24,15 @@ if (isset($_POST["confirm_payment"])) {
     Values ('$order_id','$invoice_number','$amount','$payment_mode')";
     $result = mysqli_query($con, $insert_query);
     if ($result) {
-        echo "<h3 class='text-center text-light'>Successfully completed the payment</h3>";
-        echo "<script>window.location.href = 'profile.php?my_orders';</script>";
-        exit;
+        echo "<script> 
+            swal({
+                title: 'Payment Successful',
+                text: 'Your payment has been completed successfully.',
+                icon: 'success'
+            }).then(() => {
+                window.location.href = '..#!/profile/my_orders';
+            });
+            </script>";
     }
     $update_orders = "UPDATE `user_orders` SET order_status='Complete' WHERE order_id=$order_id";
     $result_orders = mysqli_query($con, $update_orders);
@@ -70,7 +76,20 @@ if (isset($_POST["confirm_payment"])) {
             </div>
         </form>
     </div>
-
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <?php
+    if (isset($_POST["confirm_payment"]) && $result) {
+        echo "<script> 
+            swal({
+                title: 'Payment Successful',
+                text: 'Your payment has been completed successfully.',
+                icon: 'success'
+            }).then(() => {
+                window.location.href = '..#!/profile/my_orders';
+            });
+            </script>";
+    }
+    ?>
 </body>
 
 </html>

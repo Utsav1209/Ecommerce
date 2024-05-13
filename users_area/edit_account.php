@@ -15,8 +15,8 @@
                     <input type="email" class="form-control w-50 m-auto" ng-model="formData.user_email">
                 </div>
                 <div class="form-outline mb-4 d-flex w-50 m-auto">
-                    <input type="file" class="form-control m-auto" ng-model="formData.user_image" accept="image/jpeg, image/png" ngf-select>
-                    <img ng-src="./users_area/user_images/{{ formData.user_image }}" alt="" class="edit_image">
+                    <input type="file" name="user_image" class="form-control m-auto" ng-model="formData.user_image" accept="image/jpeg, image/png" ngf-select>
+                    <img ng-src="../users_area/user_images/{{ formData.user_image }}" alt="" class="edit_image">
                     <small id="image_error" class="text-danger"></small>
                 </div>
                 <div class="form-outline mb-4">
@@ -34,4 +34,12 @@
             </div>
         </div>
     </div>
+    <script>
+        <?php
+        if (isset($_POST['user_update']) && $_POST['user_update'] === 'true') {
+            echo "swal('Success', 'Account updated successfully!', 'success');";
+        }
+        ?>
+    </script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </body>

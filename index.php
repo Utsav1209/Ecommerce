@@ -3,6 +3,7 @@
 include("includes/connect.php");
 include("functions/common_function.php");
 
+
 session_start();
 ?>
 
@@ -21,7 +22,7 @@ session_start();
     <link rel="stylesheet" href="style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.js"></script>
-
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="navbarController.js"></script>
 
     <style>
@@ -35,8 +36,8 @@ session_start();
     <!-- navbar -->
     <div class="container-fluid p-0" ng-controller="BrandController">
         <!-- first child -->
-        <nav class="navbar navbar-expand-lg bg-info navbar-light" ng-hide="isLoginPage()">
-            <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg bg-info navbar-light" ng-if="!shouldHideFunctions()">
+            <div class=" container-fluid">
                 <img src="./Images/img1.png" alt="" class="logo">
                 <button class="navbar-toggler" type="button" ng-click="toggleNavbar()">
                     <span class="navbar-toggler-icon"></span>
@@ -56,7 +57,7 @@ session_start();
                         </li>";
                         } else {
                             echo "<li class='nav-item'>
-                            <a class='nav-link' href='#!/user_registration'>Register</a>
+                            <a class='nav-link' href='#!/users_area/user_registration'>Register</a>
                         </li>";
                         }
                         ?>
@@ -83,8 +84,8 @@ session_start();
         cart();
         ?>
         <!-- Second child -->
-        <nav class="navbar navbar-expand-lg bg-secondary navbar-dark" ng-hide="isLoginPage()">
-            <ul class="navbar-nav me-auto">
+        <nav class="navbar navbar-expand-lg bg-secondary navbar-dark" ng-hide="isLoginPage()" ng-if="!shouldHideFunctions()">
+            <ul class=" navbar-nav me-auto">
 
                 <?php
                 if (!isset($_SESSION['username'])) {
@@ -111,20 +112,19 @@ session_start();
             </ul>
         </nav>
         <!-- Third child -->
-        <div class="bg-light">
-            <h3 class="text-center">e-commerce Store</h3>
+        <div class="bg-light" ng-if="!shouldHideFunctions()">
+            <h3 class=" text-center">e-commerce Store</h3>
             <p class="text-center">Empowering Your Shopping Experience, One Click at a Time</p>
         </div>
         <!-- Fourth child -->
         <div class="row">
-            <div class="col-md-10">
+            <div class="col-md-{{ !shouldHideFunctions() ? '10' : '12' }}">
                 <!-- Products -->
                 <div class="row px-1">
                     <div ng-view></div>
                 </div>
             </div>
-            <div class="col-md-2 bg-secondary p-0" ng-if="!shouldHideFunctions() && !isLoginPage()">
-                <!-- Brands to be display -->
+            <div class="col-md-{{ !shouldHideFunctions() ? '2' : '0' }} bg-secondary p-0" ng-if="!shouldHideFunctions() && !isLoginPage()">
                 <div ng-if="!shouldHideFunctions()">
                     <div ng-init="fetchBrands()">
                         <ul class="navbar-nav me-auto text-center">
@@ -139,7 +139,6 @@ session_start();
                         </ul>
                     </div>
                 </div>
-                <!-- categories to be display -->
                 <div ng-if="!shouldHideFunctions()">
                     <div ng-init="fetchCategories()">
                         <ul class="navbar-nav me-auto text-center">
@@ -156,6 +155,7 @@ session_start();
                 </div>
             </div>
         </div>
+
         <!-- Last child -->
         <div class="bg-info p-3 text-center">
             <p>All rights reserved ©- Designed by Utsav-2024</p>

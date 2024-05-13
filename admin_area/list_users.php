@@ -1,4 +1,5 @@
-<div ng-app="ecommerceApp" ng-controller="BrandController">
+<?php include("./dashboard.php"); ?>
+<div ng-app="ecommerceApp" ng-controller="AdminController">
     <h3 class="text-center text-success">All Users</h3>
     <table class="table table-bordered mt-5">
         <thead class="bg-info text-center">
@@ -20,7 +21,7 @@
                 <td><img ng-src="../users_area/user_images/{{user.user_image}}" alt="{{user.username}}" class="product_img"></td>
                 <td>{{user.user_address}}</td>
                 <td>{{user.user_mobile}}</td>
-                <td><a href="#" ng-click="confirmDelete(user.user_id)"><i class="fa-solid fa-trash"></i></a></td>
+                <td><a href="#" ng-click="userDelete(user.user_id)"><i class="fa-solid fa-trash"></i></a></td>
             </tr>
         </tbody>
     </table>

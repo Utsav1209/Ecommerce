@@ -51,6 +51,6 @@ if (isset($_POST['delete'])) {
 }
 
 if (isset($_POST['dont_delete'])) {
-    echo "<script>window.open('profile.php','_self')</script>";
+    echo "<script>window.open('.#!/profile','_self')</script>";
 }
 ?>

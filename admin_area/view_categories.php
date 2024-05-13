@@ -1,5 +1,6 @@
 <!-- HTML View -->
-<div ng-model="ecommerceApp" ng-controller="BrandController">
+<?php include("./dashboard.php"); ?>
+<div ng-model="ecommerceApp" ng-controller="AdminController">
     <h3 class="text-center text-success">All Categories</h3>
     <table class="table table-boardered mt-5">
         <thead class="bg-info">

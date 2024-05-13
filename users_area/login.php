@@ -19,16 +19,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $result_cart = mysqli_query($con, $select_cart_items);
                 $has_items_in_cart = mysqli_num_rows($result_cart) > 0;
                 $_SESSION['username'] = $user_username;
-                echo json_encode(array("success" => true, "message" => "Login Successful", "hasItemsInCart" => $has_items_in_cart));
-            } else {
-                echo json_encode(array("success" => false, "message" => "Invalid Credentials"));
+                // Only set success status in response
+                echo json_encode(array("success" => true, "hasItemsInCart" => $has_items_in_cart));
+                exit; // Exit script after echoing JSON
             }
-        } else {
-            echo json_encode(array("success" => false, "message" => "Invalid Credentials"));
         }
-    } else {
-        echo json_encode(array("success" => false, "message" => "Invalid Request Data"));
     }
-} else {
-    echo json_encode(array("success" => false, "message" => "Invalid Request Method"));
+    // If login fails, set success status to false
+    echo json_encode(array("success" => false));
+    exit;
 }
+// If request method is not POST, return invalid request status
+echo json_encode(array("success" => false, "message" => "Invalid Request Method"));

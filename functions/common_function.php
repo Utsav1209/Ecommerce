@@ -218,7 +218,7 @@ function search_product()
                 <p class='card-title'>Price: $product_price/-</p>
                 <a href='index.php?add_to_cart=$product_id' class='btn btn-info'>Add to Cart</a>
                 <a href='product_details.php?product_id=$product_id' class='btn btn-success'>View more</a>
-                <a href='index.php' class='btn btn-secondary'>Go Home</a>
+                <a href='.#!/home' class='btn btn-secondary'>Go Home</a>
             </div>
         </div>
     </div>";
@@ -258,7 +258,7 @@ function view_details()
                 <p class='card-text'>$product_description</p>
                 <p class='card-title'>Price: $product_price/-</p>
                 <a href='index.php?add_to_cart=$product_id' class='btn btn-info'>Add to Cart</a>
-                <a href='index.php' class='btn btn-secondary'>Go Home</a>
+                <a href='.#!/home' class='btn btn-secondary'>Go Home</a>
             </div>
         </div>
     </div>
@@ -315,18 +315,39 @@ function cart()
         $result_query = mysqli_query($con, $select_query);
         $num_of_rows = mysqli_num_rows($result_query);
         if ($num_of_rows > 0) {
-            echo "<script>alert('This item already present inside cart')</script>";
-            echo "<script>window.open('index.php','_self')</script>";
+            echo "<script>
+                    swal({
+                        title: 'This item is already in your cart',
+                        icon: 'warning',
+                    }).then((value) => {
+                        window.location.href = '.#!/home'; 
+                    });;
+                  </script>";
         } else {
-            $insert_query = "INSERT INTO `cart_details` (product_id,ip_address,quantity) VALUES ('$get_product_id','$get_ip_add',0)";
+            $insert_query = "INSERT INTO `cart_details` (product_id,ip_address,quantity) VALUES ('$get_product_id','$get_ip_add',1)";
             $result_query = mysqli_query($con, $insert_query);
-            echo "<script>alert('Item is added to cart')</script>";
-            echo "<script>window.open('index.php','_self')</script>";
+            echo "<script>
+                    swal({
+                        title: 'Item added to your cart',
+                        icon: 'success',
+                    }).then((value) => {
+                        window.location.href = '.#!/home'; 
+                    });
+                  </script>";
         }
+        echo "<script>
+                setTimeout(function(){
+                    swal.close();
+                }, 2000);
+              </script>";
+        echo "<script>
+                if ( window.history.replaceState ) {
+                    window.history.replaceState( null, null, window.location.href );
+                }
+              </script>";
     }
 }
 
-// function to get cart item number
 function cart_item()
 {
     if (isset($_GET['add_to_cart'])) {
@@ -365,12 +386,7 @@ function total_cart_price()
             $total_price += $product_values;
         }
     }
-    return $total_price;
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'total-price') {
-    $totalPrice = total_cart_price();
-    echo json_encode(array('totalPrice' => $totalPrice));
+    echo "$total_price";
 }
 
 
@@ -395,7 +411,7 @@ function get_user_order_details()
                         <p class='text-center'><a href='#!/profile/my_orders' class='text-dark'>Order details</a></p>";
                     } else {
                         echo "<h3 class='text-center text-success mt-5 mb-2'>You have Zero pending orders</h3>
-                        <p class='text-center'><a href='../index.php' class='text-dark'>Explore Products</a></p>";
+                        <p class='text-center'><a href='#!/home' class='text-dark'>Explore Products</a></p>";
                     }
                 }
             }

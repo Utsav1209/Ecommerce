@@ -2,6 +2,7 @@
 include("../includes/connect.php");
 
 ?>
+<?php include("./dashboard.php"); ?>
 <div class="container mt-3">
     <h1 class="text-center">Insert Products</h1>
     <!-- form -->

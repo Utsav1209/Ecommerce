@@ -1,4 +1,5 @@
-<div ng-model="ecommerceApp" ng-controller="BrandController">
+<?php include("./dashboard.php"); ?>
+<div ng-model="ecommerceApp" ng-controller="AdminController">
     <h2 class="text-center">Insert Brands</h2>
     <form ng-submit="insertBrand()" class="mb-2">
         <div class="input-group w-90 mb-3">

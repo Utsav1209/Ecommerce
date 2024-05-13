@@ -26,6 +26,9 @@ app.config(["$routeProvider", function ($routeProvider) {
         when("/profile/delete_account", {
             templateUrl: "./users_area/delete_account.php",
         }).
+        when("/users_area/checkout", {
+            templateUrl: "./users_area/checkout.php",
+        }).
         when("/users_area/user_registration", {
             templateUrl: "./users_area/user_registration.html",
         }).
@@ -35,53 +38,69 @@ app.config(["$routeProvider", function ($routeProvider) {
         when("index", {
             templateUrl: "index.php",
         }).
-        otherwise({
-            redirectTo: "/home"
+        when("/admin_area/view_products", {
+            templateUrl: "./admin_area/view_products.php",
+            controller: "AdminController"
         }).
-        when("/view_products", {
-            templateUrl: "view_products.php",
+        when("/admin_area/insert_product", {
+            templateUrl: "./admin_area/insert_product.php",
+            controller: "AdminController"
         }).
-        when("/insert_product", {
-            templateUrl: "insert_product.php",
+        when("/admin_area/insert_categories", {
+            templateUrl: "./admin_area/insert_categories.php",
+            controller: "AdminController"
         }).
-        when("/insert_categories", {
-            templateUrl: "insert_categories.php",
+        when("/admin_area/view_categories", {
+            templateUrl: "./admin_area/view_categories.php",
+            controller: "AdminController"
         }).
-        when("/view_categories", {
-            templateUrl: "view_categories.php",
+        when("/admin_area/insert_brand", {
+            templateUrl: "./admin_area/insert_brands.php",
+            controller: "AdminController"
         }).
-        when("/insert_brand", {
-            templateUrl: "insert_brands.php",
+        when("/admin_area/view_brand", {
+            templateUrl: "./admin_area/view_brands.php",
+            controller: "AdminController"
         }).
-        when("/view_brand", {
-            templateUrl: "view_brands.php",
+        when("/admin_area/list_orders", {
+            templateUrl: "./admin_area/list_orders.php",
+            controller: "AdminController"
+
         }).
-        when("/list_orders", {
-            templateUrl: "list_orders.php",
+        when("/admin_area/list_payments", {
+            templateUrl: "./admin_area/list_payments.php",
+            controller: "AdminController"
         }).
-        when("/list_payments", {
-            templateUrl: "list_payments.php",
-        }).
-        when("/list_users", {
-            templateUrl: "list_users.php",
+        when("/admin_area/list_users", {
+            templateUrl: "./admin_area/list_users.php",
+            controller: "AdminController"
         }).
         when("/admin_logout", {
-            templateUrl: "admin_logout.php",
+            templateUrl: "./admin_area/admin_logout.php",
+            controller: "LogoutController"
         }).
         when("/edit_category/:categoryId", {
-            templateUrl: "edit_category.php",
+            templateUrl: "./admin_area/edit_category.php",
             controller: "editCategory"
         }).
         when("/edit_brands/:brandId", {
-            templateUrl: "edit_brands.php",
+            templateUrl: "./admin_area/edit_brands.php",
             controller: "editBrands"
         }).
         when("/edit_products/:productId", {
-            templateUrl: "edit_products.php",
+            templateUrl: "./admin_area/edit_products.php",
             controller: "editProducts"
         }).
-        when("/admin_login", {
-            templateUrl: "admin_login.php",
+        when("/admin_area/admin_login", {
+            templateUrl: "./admin_area/admin_login.php",
+            controller: "AdminController"
+        }).
+        when("/admin_area/dashboard", {
+            templateUrl: "./admin_area/dashboard.php",
+            controller: "AdminController"
+        }).
+        when("/admin_area/admin_registration", {
+            templateUrl: "./admin_area/admin_registration.php",
         }).
         when("/brands/:brandId", {
             templateUrl: "getUniqueBrand.php",
@@ -93,13 +112,31 @@ app.config(["$routeProvider", function ($routeProvider) {
         }).
         when("/search", {
             templateUrl: "search_product.php",
-            controller: "SearchController",
+            controller: "SearchPageController",
         })
 }]);
 
-app.controller('SearchController', function ($scope, $http) {
+app.controller('LogoutController', function ($http, $window) {
+    // Make an HTTP request to logout.php
+    $http.get('admin_area/admin_logout.php')
+        .then(function (response) {
+            $window.location.href = '.#!/admin_area/admin_login';
+        })
+        .catch(function (error) {
+            console.error('Error logging out:', error);
+            // Handle error if necessary
+        });
+});
+
+app.controller('SearchPageController', function ($scope, $rootScope) {
+    $scope.products = $rootScope.products;
+});
+
+
+app.controller('SearchController', function ($scope, $rootScope, $http, $location) {
     $scope.searchData = '';
-    $scope.products = [];
+    $rootScope.products = [];
+
     $scope.noProductMessage = '';
     $scope.searchProduct = function () {
         $http.get('searchProduct.php', {
@@ -107,12 +144,13 @@ app.controller('SearchController', function ($scope, $http) {
         })
             .then(function (response) {
                 console.log(response);
-                $scope.products = response.data;
-                console.log($scope.products);
-                if ($scope.products.length === 0) {
+                $rootScope.products = response.data;
+                console.log('Products', $rootScope.products);
+                if ($rootScope.products.length === 0) {
                     $scope.noProductMessage = "No product found for this search!";
                 } else {
-                    $scope.noProductMessage = "";
+                    // $scope.noProductMessage = "";
+                    $location.path('/search');
                 }
             })
             .catch(function (error) {
@@ -120,6 +158,7 @@ app.controller('SearchController', function ($scope, $http) {
             });
     };
 });
+
 
 app.controller('BrandDetailsController', function ($scope, $http, $routeParams) {
     $http.get('get_products_by_brand.php', {
@@ -152,7 +191,7 @@ app.controller('editProducts', function ($scope, $http, $routeParams) {
     $scope.formData = {};
     var productId = $routeParams.productId;
     $scope.fetchProductData = function (productId) {
-        $http.get('fetchProductData.php?product_id=' + productId)
+        $http.get('admin_area/fetchProductData.php?product_id=' + productId)
             .then(function (response) {
                 $scope.formData = response.data;
                 $scope.formData.product_price = parseFloat($scope.formData.product_price);
@@ -175,16 +214,23 @@ app.controller('editProducts', function ($scope, $http, $routeParams) {
         formData.append('product_image1', $scope.formData.product_image1);
         formData.append('product_id', $scope.formData.product_id);
 
-        $http.post('editProduct.php', formData, {
+        $http.post('admin_area/editProduct.php', formData, {
             transformRequest: angular.identity,
             headers: { 'Content-Type': undefined }
         }).then(function (response) {
             console.log(response.data);
-            alert('Product updated successfully');
-            window.location.href = 'index.php?view_products';
+            swal({
+                title: "Success",
+                text: "Product Updated successfully!",
+                icon: "success",
+                timer: 2000,
+                buttons: false,
+            }).then(function () {
+                window.location.href = '.#!/admin_area/view_products';
+            });
         }).catch(function (error) {
             console.error('Error updating product:', error);
-            alert('An error occurred while updating the product.');
+            swal('Error', 'An error occurred while updating the product', 'error');
         });
     };
 });
@@ -195,7 +241,7 @@ app.controller('editBrands', function ($scope, $http, $routeParams) {
 
     var brandId = $routeParams.brandId;
 
-    $http.get('fetchBrandData.php?edit_brands=' + brandId)
+    $http.get('admin_area/fetchBrandData.php?edit_brands=' + brandId)
         .then(function (response) {
             $scope.formData = response.data;
         })
@@ -204,18 +250,25 @@ app.controller('editBrands', function ($scope, $http, $routeParams) {
         });
 
     $scope.editBrand = function () {
-        $http.post('editBrand.php', { brand_id: brandId, brand_name: $scope.formData.brand_name })
+        $http.post('admin_area/editBrand.php', { brand_id: brandId, brand_name: $scope.formData.brand_name })
             .then(function (response) {
                 if (response.data.success) {
-                    alert('Brand updated successfully');
-                    window.location.href = './index.php?view_brands';
+                    swal({
+                        title: "Success",
+                        text: "Brand Updated Successfully!",
+                        icon: "success",
+                        timer: 2000,
+                        buttons: false,
+                    }).then(function () {
+                        window.location.href = '.#!/admin_area/view_brand';
+                    });
                 } else {
-                    alert('Error updating brand');
+                    swal('Error', 'Error Updating Brand', 'error');
                 }
             })
             .catch(function (error) {
                 console.error('Error updating brand:', error);
-                alert('An error occurred while updating the brand.');
+                swal('Error', 'An error occurred while updating the brand', 'error');
             });
     };
 });
@@ -226,7 +279,7 @@ app.controller('editCategory', function ($scope, $http, $routeParams) {
     var categoryId = $routeParams.categoryId;
 
 
-    $http.get('fetchCategoryData.php?edit_category=' + categoryId)
+    $http.get('admin_area/fetchCategoryData.php?edit_category=' + categoryId)
         .then(function (response) {
             console.log('fetch:', response.data);
             $scope.formData = response.data;
@@ -236,19 +289,26 @@ app.controller('editCategory', function ($scope, $http, $routeParams) {
         });
     $scope.editCategory = function () {
         console.log('edited title', $scope.formData.category_title);
-        $http.post('editCategory.php', { category_id: categoryId, category_title: $scope.formData.category_title })
+        $http.post('admin_area/editCategory.php', { category_id: categoryId, category_title: $scope.formData.category_title })
             .then(function (response) {
                 console.log('response', response.data);
                 if (response.data.success) {
-                    alert('Category updated successfully');
-                    window.location.href = './index.php?view_categories';
+                    swal({
+                        title: "Success",
+                        text: "Category Updated Successfully!",
+                        icon: "success",
+                        timer: 2000,
+                        buttons: false,
+                    }).then(function () {
+                        window.location.href = '.#!/admin_area/view_categories';
+                    });
                 } else {
-                    alert('Error updating category');
+                    swal('Error', 'Error Updating Category', 'error');
                 }
             })
             .catch(function (error) {
                 console.error('Error updating category:', error);
-                alert('An error occurred while updating the category.');
+                swal('Error', 'An error occurred while updating the category', 'error');
             });
     };
 });
@@ -271,9 +331,7 @@ app.controller('getOrder', function ($scope, $http) {
 
 app.controller('EditAccountController', function ($scope, $http) {
     $scope.formData = {};
-    $scope.updateSuccess = false; // Initialize updateSuccess variable
-
-    // Fetch user details
+    $scope.updateSuccess = false;
     $scope.fetchUserDetails = function () {
         $http.get('users_area/getUserData.php')
             .then(function (response) {
@@ -284,17 +342,14 @@ app.controller('EditAccountController', function ($scope, $http) {
             });
     };
 
-    // Call fetchUserDetails function when the controller loads
     $scope.fetchUserDetails();
 
-    // Update account function
     $scope.updateAccount = function () {
         var formData = new FormData();
         angular.forEach($scope.formData, function (value, key) {
             formData.append(key, value);
         });
 
-        // Include user_id in the form data
         formData.append('user_id', $scope.formData.user_id);
 
         $http.post('users_area/updateAccount.php', formData, {
@@ -304,9 +359,8 @@ app.controller('EditAccountController', function ($scope, $http) {
             }
         })
             .then(function (response) {
-                // Check response from server
                 if (response.data.success) {
-                    $scope.updateSuccess = true; // Set updateSuccess to true if update is successful
+                    $scope.updateSuccess = true;
                     console.log('Account updated successfully');
                 } else {
                     console.error('Error updating account:', response.data.error);
@@ -320,10 +374,103 @@ app.controller('EditAccountController', function ($scope, $http) {
 
 
 app.controller('BrandController', function ($scope, $http, $location) {
-    $scope.isLoginPage = function () {
-        console.log($location.path())
-        return $location.path() === '/users_area/user_login';
+    // $scope.isLoginPage = function () {
+    //     console.log($location.path())
+    //     return $location.path() === '/users_area/user_login';
+    // };
+    // $scope.adlogin = function () {
+    //     console.log($location.path())
+    //     return $location.path() == '/admin_area/admin_login';
+    // };
+    // $scope.isUserDashboard = function () {
+    //     console.log('user ng', $location.path())
+    //     var userAreaPaths = ['/user_login', '/home', '/display_all', '/profile', '/cart', '/brands', '/category', '/search'];
+    //     return userAreaPaths.some(function (path) {
+    //         return $location.path().includes(path);
+    //     });
+    // };
+    // $scope.isAdminDashboard = function () {
+    //     console.log('admin ng', $location.path())
+    //     var adminAreaPaths = ['/dashboard', '/admin_login'];
+    //     return adminAreaPaths.some(function (path) {
+    //         return $location.path().includes(path);
+    //     });
+    // };
+
+    // $scope.fetchCartItems = function () {
+    //     $http.get('cart_func.php').then(function (response) {
+    //         $scope.cart = response.data;
+    //     });
+    // };
+
+
+
+    $scope.cart = {
+        cart_items: [],
+        total_price: 0
     };
+    $http.get('cart_func.php')
+        .then(function (response) {
+            $scope.cart.cart_items = response.data.cart_items;
+            $scope.cart.total_price = response.data.total_price;
+        }, function (error) {
+            console.error('Error fetching cart items:', error);
+        });
+
+    $scope.checkItemUpdated = function () {
+        $scope.isAnyItemUpdated();
+    };
+
+    $scope.isAnyItemUpdated = function () {
+        $scope.cart.isUpdated = $scope.cart.cart_items.some(function (item) {
+            return item.quantity !== item.originalQuantity;
+        });
+    };
+
+    $scope.updateCart = function () {
+        if (!$scope.cart.isUpdated) {
+            swal('Update Quantity', "Please update at least one item's quantity before updating the cart.", 'warning');
+            return;
+        }
+        $http.post('update_cart.php', { cart_items: $scope.cart.cart_items })
+            .then(function (response) {
+                $scope.cart.total_price = response.data.total_price;
+                location.reload();
+            }, function (error) {
+                console.error('Error updating cart:', error);
+            });
+    };
+
+    $scope.isAnyItemChecked = function () {
+        return $scope.cart.cart_items.some(function (item) {
+            return item.remove;
+        });
+    };
+
+    $scope.removeItem = function () {
+        if (!$scope.isAnyItemChecked()) {
+            swal('Select atleast one item', "Please check at least one item to remove.", 'warning');
+            return;
+        }
+        var removedItems = $scope.cart.cart_items.filter(function (item) {
+            return item.remove;
+        });
+        $http.post('remove_cart_items.php', { removed_items: removedItems })
+            .then(function (response) {
+                $scope.cart.cart_items = $scope.cart.cart_items.filter(function (item) {
+                    return !item.remove;
+                });
+                $scope.cart.total_price = response.data.total_price;
+                location.reload();
+            }, function (error) {
+                console.error('Error removing cart items:', error);
+            });
+    };
+    $scope.continueShopping = function () {
+        window.location.href = '#!/home';
+    };
+
+
     $scope.getPendingOrders = function () {
         $http.get('userProfile.php')
             .then(function (response) {
@@ -338,13 +485,11 @@ app.controller('BrandController', function ($scope, $http, $location) {
             });
     };
 
-    var hideFunctionPaths = ['/profile', '/profile/edit_account', '/profile/my_orders', '/profile/delete_account', '/cart', '/users_area/user_registration', '/users_area/user_login'];
-
+    var hideFunctionPaths = ['/users_area/user_registration', '/users_area/user_login', '/admin_area/admin_registration', '/admin_area/admin_login', '/admin_area/dashboard', '/admin_area/insert_product', '/admin_area/view_products', '/admin_area/insert_categories', '/admin_area/insert_brand', '/admin_area/view_brand', '/admin_area/list_orders', '/admin_area/list_payments', '/admin_area/list_users', '/admin_area/view_categories'];
     $scope.shouldHideFunctions = function () {
         var currentPath = $location.path();
         return hideFunctionPaths.includes(currentPath);
     };
-
 
     $scope.getPendingOrders();
 
@@ -388,31 +533,6 @@ app.controller('BrandController', function ($scope, $http, $location) {
 
     $scope.getAllProducts();
 
-
-    // $scope.searchData = '';
-    // $scope.products = [];
-
-
-    // $scope.searchProduct = function () {
-    //     $http.get('searchProduct.php', {
-    //         params: { search_data: $scope.searchData }
-    //     })
-    //         .then(function (response) {
-    //             console.log($scope.searchData)
-    //             $scope.searchproducts = response.data;
-    //             if ($scope.searchproducts.length === 0) {
-    //                 $scope.noProductMessage = "No product found for this search!";
-    //             } else {
-    //                 $scope.noProductMessage = "";
-    //             }
-    //             window.location.href = 'search_product.php?search_data=' + $scope.searchData;
-    //         })
-    //         .catch(function (error) {
-    //             console.log('Error searching products:', error);
-    //         });
-    // };
-
-
     $scope.user = {};
 
     $scope.registerUser = function () {
@@ -425,48 +545,68 @@ app.controller('BrandController', function ($scope, $http, $location) {
         formData.append('user_contact', $scope.user.contact);
         formData.append('user_image', $scope.user.image);
 
-        $http.post('register.php', formData, {
+        $http.post('users_area/register.php', formData, {
             transformRequest: angular.identity,
             headers: { 'Content-Type': undefined }
         })
             .then(function (response) {
                 console.log(response.data);
-                alert('Registered Successfully');
-                window.location.href = './user_login.php';
+                swal({
+                    title: "Success",
+                    text: "Registration successful!",
+                    icon: "success",
+                    timer: 2000,
+                    buttons: false,
+                }).then(function () {
+                    window.location.href = '.#!/users_area/user_login';
+                });
             })
             .catch(function (error) {
                 console.error('Error registering user:', error);
-                alert('An error occurred while registering the user.');
+                swal('Error', 'An error occurred while registering the user.', 'error');
             });
     };
 
+    $scope.userData = {
+        user_username: '',
+        user_password: ''
+    };
 
     $scope.login = function () {
         var data = {
-            user_username: $scope.user_username,
-            user_password: $scope.user_password
+            user_username: $scope.userData.user_username,
+            user_password: $scope.userData.user_password
         };
-        console.log('Data sent:', data);
 
-        $http.post('login.php', data)
+        $http.post('users_area/login.php', data)
             .then(function (response) {
-                console.log('Response data:', response.data);
+                console.log('Login response:', response.data);
                 if (response.data.success) {
-                    alert('Login Successful');
-                    if (response.data.hasItemsInCart) {
-                        window.location.href = 'http://localhost/Ecommerce/#!/home';
-                    } else {
-                        window.location.href = 'http://localhost/Ecommerce/#!/home';
-                    }
+                    console.log('sdfdfsdfdsf', response.data)
+                    swal({
+                        title: "Success",
+                        text: "Login successful!",
+                        icon: "success",
+                        timer: 2000,
+                        buttons: false,
+                    })
+                        .then(function () {
+                            if (response.data.hasItemsInCart) {
+                                window.location.href = 'http://localhost/Ecommerce%20Website%20-%20Angularjs/#!/home';
+                            } else {
+                                window.location.href = 'http://localhost/Ecommerce%20Website%20-%20Angularjs/#!/home';
+                            }
+                        });
                 } else {
-                    alert('Invalid Credentials');
+                    swal('Error', 'Invalid username or password', 'error');
                 }
             })
             .catch(function (error) {
                 console.error('Error logging in:', error);
-                alert('An error occurred while logging in.');
+                swal('Error', 'An error occurred while logging in', 'error');
             });
     };
+
 
     $scope.isCollapsed = true;
 
@@ -491,8 +631,83 @@ app.controller('BrandController', function ($scope, $http, $location) {
             console.error('Error fetching user data:', error);
         });
 
+
+});
+
+
+
+app.controller('AdminController', function ($scope, $http, $location) {
+
+    $scope.admin = {};
+
+    $scope.registeradmin = function () {
+        var data = {
+            admin_name: $scope.admin.admin_name,
+            admin_email: $scope.admin.admin_email,
+            admin_password: $scope.admin.admin_password,
+            confirm_password: $scope.admin.confirm_password
+        };
+        console.log(data);
+        $http.post('admin_area/adregistration.php', data)
+            .then(function (response) {
+                console.log(response.data);
+                if (response.data.success) {
+                    swal({
+                        title: "Success",
+                        text: "Admin Registered Successfully!",
+                        icon: "success",
+                        timer: 2000,
+                        buttons: false,
+                    }).then(function () {
+                        window.location.href = '#!/admin_area/admin_login';
+                    });
+                } else {
+                    swal('Error', 'Registration Failed: ' + response.data.message, 'error');
+                }
+            })
+            .catch(function (error) {
+                console.error('Error registering admin:', error);
+                swal('Error', 'An error occurred while registering the admin', 'error');
+            });
+    };
+
+    $scope.userData = {
+        admin_name: '',
+        admin_password: ''
+    };
+
+    $scope.adlogin = function () {
+        var data = {
+            admin_name: $scope.userData.admin_name,
+            admin_password: $scope.userData.admin_password
+        };
+        console.log(data);
+        $http.post('admin_area/adlogin.php', data)
+            .then(function (response) {
+                console.log(response.data);
+                if (response.data.success) {
+                    swal({
+                        title: "Success",
+                        text: "Login successful!",
+                        icon: "success",
+                        timer: 2000,
+                        buttons: false,
+                    })
+                        .then(function () {
+                            window.location.href = '#!/admin_area/dashboard';
+                        });
+                } else {
+                    swal('Error', 'Invalid username or password', 'error');
+                }
+            })
+            .catch(function (error) {
+                console.error('Error logging in:', error);
+                swal('Error', 'An error occurred while logging in', 'error');
+            });
+    };
+
     $scope.fetchCategories2 = function () {
-        $http.get('getAdCategories.php')
+        $http.get('admin_area/getAdCategories.php')
             .then(function (response) {
                 $scope.categories = response.data;
             })
@@ -507,24 +722,31 @@ app.controller('BrandController', function ($scope, $http, $location) {
 
         if (confirm('Are you sure you want to delete this category?')) {
 
-            $http.get('deleteCategory.php', {
+            $http.get('admin_area/deleteCategory.php', {
                 params: { delete_category: categoryId }
             })
                 .then(function (response) {
-
-                    alert('Category has been deleted successfully');
+                    swal({
+                        title: "Success",
+                        text: "Category has been deleted Successfully!",
+                        icon: "success",
+                        timer: 2000,
+                        buttons: false,
+                    }).then(function () {
+                        window.location.href = '.#!/admin_area/view_categories';
+                    });
 
                     $scope.fetchCategories2();
                 })
                 .catch(function (error) {
 
                     console.log('Error deleting category:', error);
-                    alert('An error occurred while deleting the category.');
+                    swal('Error', 'An error occurred while deleting the category', 'error');
                 });
         }
     };
     $scope.fetchBrands2 = function () {
-        $http.get('viewAdBrands.php')
+        $http.get('admin_area/viewAdBrands.php')
             .then(function (response) {
                 $scope.brands = response.data;
             })
@@ -539,19 +761,26 @@ app.controller('BrandController', function ($scope, $http, $location) {
 
         if (confirm('Are you sure you want to delete this brand?')) {
 
-            $http.get('deleteBrand.php', {
+            $http.get('admin_area/deleteBrand.php', {
                 params: { delete_brand: brandId }
             })
                 .then(function (response) {
-
-                    alert('Brand has been deleted successfully');
+                    swal({
+                        title: "Success",
+                        text: "Brand has been deleted successfully!",
+                        icon: "success",
+                        timer: 2000,
+                        buttons: false,
+                    }).then(function () {
+                        window.location.href = '.#!/admin_area/view_brand';
+                    });
 
                     $scope.fetchBrands();
                 })
                 .catch(function (error) {
 
                     console.log('Error deleting brand:', error);
-                    alert('An error occurred while deleting the brand.');
+                    swal('Error', 'An error occurred while deleting the brand', 'error');
                 });
         }
     };
@@ -561,14 +790,22 @@ app.controller('BrandController', function ($scope, $http, $location) {
 
     $scope.insertBrand = function () {
         var brandName = $scope.brandName;
-        $http.post('insertBrand.php', { brand_name: brandName })
+        $http.post('admin_area/insertBrand.php', { brand_name: brandName })
             .then(function (response) {
-                alert('Brand has been inserted successfully');
+                swal({
+                    title: "Success",
+                    text: "Brand has been inserted successfully!",
+                    icon: "success",
+                    timer: 2000,
+                    buttons: false,
+                }).then(function () {
+                    window.location.href = '.#!/admin_area/view_brand';
+                });
                 $scope.brandName = '';
             })
             .catch(function (error) {
                 console.log('Error inserting brand:', error);
-                alert('An error occurred while inserting the brand.');
+                swal('Error', 'An error occurred while inserting the brand', 'error');
             });
     };
 
@@ -577,21 +814,29 @@ app.controller('BrandController', function ($scope, $http, $location) {
     $scope.insertCategory = function () {
         var categoryName = $scope.categoryName;
         console.log('dsfdsf', $scope.categoryName);
-        $http.post('insertCategory.php', { category_name: categoryName })
+        $http.post('admin_area/insertCategory.php', { category_name: categoryName })
             .then(function (response) {
                 console.log('asdasdasd', response);
-                alert('Category has been inserted successfully');
+                swal({
+                    title: "Success",
+                    text: "Category has been inserted successfully!",
+                    icon: "success",
+                    timer: 2000,
+                    buttons: false,
+                }).then(function () {
+                    window.location.href = '.#!/admin_area/view_categories';
+                });
                 $scope.categoryName = '';
             })
             .catch(function (error) {
                 console.log('Error inserting category:', error);
-                alert('An error occurred while inserting the category.');
+                swal('Error', 'AAn error occurred while inserting the category', 'error');
             });
     };
 
     $scope.orders = [];
     $scope.fetchOrders = function () {
-        $http.get('fetchOrders.php')
+        $http.get('admin_area/fetchOrders.php')
             .then(function (response) {
                 $scope.orders = response.data;
             })
@@ -600,16 +845,24 @@ app.controller('BrandController', function ($scope, $http, $location) {
             });
     };
 
-    $scope.confirmDelete = function (orderId) {
+    $scope.orderDelete = function (orderId) {
         if (confirm("Are you sure you want to delete this order?")) {
-            $http.get('deleteOrder.php', { params: { order_id: orderId } })
+            $http.get('admin_area/deleteOrder.php', { params: { order_id: orderId } })
                 .then(function (response) {
-                    alert('Order deleted successfully');
+                    swal({
+                        title: "Success",
+                        text: "Order deleted successfully!",
+                        icon: "success",
+                        timer: 2000,
+                        buttons: false,
+                    }).then(function () {
+                        window.location.href = '.#!/admin_area/list_orders';
+                    });
                     $scope.fetchOrders();
                 })
                 .catch(function (error) {
                     console.error('Error deleting order:', error);
-                    alert('An error occurred while deleting the order.');
+                    swal('Error', 'An error occurred while deleting the order', 'error');
                 });
         }
     };
@@ -617,7 +870,7 @@ app.controller('BrandController', function ($scope, $http, $location) {
     $scope.fetchOrders();
 
     $scope.fetchPayments = function () {
-        $http.get('fetchPayment.php')
+        $http.get('admin_area/fetchPayment.php')
             .then(function (response) {
                 $scope.payments = response.data;
             })
@@ -626,23 +879,31 @@ app.controller('BrandController', function ($scope, $http, $location) {
             });
     };
 
-    $scope.confirmDelete = function (paymentId) {
+    $scope.paymentDelete = function (paymentId) {
         if (confirm("Are you sure you want to delete this payment?")) {
-            $http.get('deletePayment.php', { params: { payment_id: paymentId } })
+            $http.get('admin_area/deletePayment.php', { params: { payment_id: paymentId } })
                 .then(function (response) {
-                    alert('Payment has been deleted successfully');
+                    swal({
+                        title: "Success",
+                        text: "Payment has been deleted successfully!",
+                        icon: "success",
+                        timer: 2000,
+                        buttons: false,
+                    }).then(function () {
+                        window.location.href = '.#!/admin_area/list_payments';
+                    });
                     $scope.fetchPayments();
                 })
                 .catch(function (error) {
                     console.log('Error deleting payment:', error);
-                    alert('An error occurred while deleting the payment.');
+                    swal('Error', 'An error occurred while deleting the payment', 'error');
                 });
         }
     };
     $scope.fetchPayments();
 
     $scope.fetchUsers = function () {
-        $http.get('fetchUser.php')
+        $http.get('admin_area/fetchUser.php')
             .then(function (response) {
                 $scope.users = response.data;
             })
@@ -653,16 +914,24 @@ app.controller('BrandController', function ($scope, $http, $location) {
 
     $scope.fetchUsers();
 
-    $scope.confirmDelete = function (userId) {
+    $scope.userDelete = function (userId) {
         if (confirm("Are you sure you want to delete this user?")) {
-            $http.get('deleteUser.php', { params: { user_id: userId } })
+            $http.get('admin_area/deleteUser.php', { params: { user_id: userId } })
                 .then(function (response) {
-                    alert('User has been deleted successfully');
+                    swal({
+                        title: "Success",
+                        text: "User has been deleted successfully!",
+                        icon: "success",
+                        timer: 2000,
+                        buttons: false,
+                    }).then(function () {
+                        window.location.href = '.#!/admin_area/list_users';
+                    });
                     $scope.fetchUsers();
                 })
                 .catch(function (error) {
                     console.log('Error deleting user:', error);
-                    alert('An error occurred while deleting the user.');
+                    swal('Error', 'An error occurred while deleting the user', 'error');
                 });
         }
     };
@@ -677,18 +946,26 @@ app.controller('BrandController', function ($scope, $http, $location) {
             });
     };
 
-    $scope.confirmDelete = function (productId) {
+    $scope.productDelete = function (productId) {
         if (confirm("Are you sure you want to delete this product?")) {
-            $http.get('deleteProducts.php', {
+            $http.get('admin_area/deleteProducts.php', {
                 params: { product_id: productId }
             })
                 .then(function (response) {
-                    alert('Product has been deleted successfully');
+                    swal({
+                        title: "Success",
+                        text: "Product has been deleted successfully!",
+                        icon: "success",
+                        timer: 2000,
+                        buttons: false,
+                    }).then(function () {
+                        window.location.href = '.#!/admin_area/view_products';
+                    });
                     $scope.fetchProducts();
                 })
                 .catch(function (error) {
                     console.log('Error deleting product:', error);
-                    alert('An error occurred while deleting the product.');
+                    swal('Error', 'An error occurred while deleting the product', 'error');
                 });
         }
     };
@@ -722,7 +999,7 @@ app.controller('BrandController', function ($scope, $http, $location) {
         console.log('FormData:', formData);
 
 
-        $http.post('insertProduct.php', formData, {
+        $http.post('admin_area/insertProduct.php', formData, {
             transformRequest: angular.identity,
             headers: {
                 'Content-Type': undefined
@@ -730,7 +1007,13 @@ app.controller('BrandController', function ($scope, $http, $location) {
         })
             .then(function (response) {
                 console.log('ResponseP:', response.data);
-                alert('Product inserted successfully');
+                swal({
+                    title: "Success",
+                    text: "Product Inserted successfully!",
+                    icon: "success",
+                    timer: 2000,
+                    buttons: false,
+                })
                 $scope.product_title = '';
                 $scope.product_description = '';
                 $scope.product_keywords = '';
@@ -743,90 +1026,7 @@ app.controller('BrandController', function ($scope, $http, $location) {
             })
             .catch(function (error) {
                 console.error('Error inserting product:', error);
-                alert('An error occurred while inserting the product.');
-            });
-    };
-
-
-    // $scope.fetchBrandData = function () {
-    //     $http.get('./admin_area/fetchBrandData.php')
-    //         .then(function (response) {
-    //             $scope.formData.brand_name = response.data.brand_name;
-    //             console.log('Response', response.data);
-    //         }, function (error) {
-    //             console.error('Error fetching brand data:', error);
-    //         });
-    // };
-
-    // $scope.fetchBrandData();
-
-
-    $scope.adlogin = function () {
-        var data = {
-            admin_name: $scope.admin_name,
-            admin_password: $scope.admin_password
-        };
-
-        $http.post('adlogin.php', data)
-            .then(function (response) {
-                console.log(response.data);
-                if (response.data.success) {
-                    alert('Login Successful');
-                    setTimeout(function () {
-                        window.location.href = 'index.php';
-                    });
-                } else {
-                    alert('Invalid Credentials');
-                }
-            })
-            .catch(function (error) {
-                console.error('Error logging in:', error);
-                alert('An error occurred while logging in.');
-            });
-    };
-
-    // $scope.formData = {};
-
-    // $scope.adregister = function () {
-    //     $http.post('adRegistration.php', $scope.formData)
-    //         .then(function (response) {
-    //             if (response.data.success) {
-    //                 alert('Registration Successful');
-    //                 window.location.href = 'admin_login.php';
-    //             } else {
-    //                 alert(response.data.message);
-    //             }
-    //         })
-    //         .catch(function (error) {
-    //             console.error('Error:', error);
-    //             alert('An error occurred while registering.');
-    //         });
-    // };
-
-
-    $scope.admin = {};
-
-    $scope.registeradmin = function () {
-        var data = {
-            admin_name: $scope.admin.admin_name,
-            admin_email: $scope.admin.admin_email,
-            admin_password: $scope.admin.admin_password,
-            confirm_password: $scope.admin.confirm_password
-        };
-
-        $http.post('adregistration.php', data)
-            .then(function (response) {
-                console.log(response.data);
-                if (response.data.success) {
-                    alert('Registered Successfully');
-                    window.location.href = './admin_login.php';
-                } else {
-                    alert('Registration Failed: ' + response.data.message);
-                }
-            })
-            .catch(function (error) {
-                console.error('Error registering admin:', error);
-                alert('An error occurred while registering the admin.');
+                swal('Error', 'An error occurred while inserting the product', 'error');
             });
     };
 });

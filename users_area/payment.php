@@ -42,7 +42,7 @@ include("../functions/common_function.php");
                 <a href="https://www.paypal.com" target="_blank"><img src="../Images/paypal.png" alt="" class="payment_img"></a>
             </div>
             <div class="col-md-6">
-                <a href="order.php?user_id=<?php echo $user_id ?>">
+                <a href="users_area/order.php?user_id=<?php echo $user_id ?>">
                     <h2 class="text-center">Pay Offline</h2>
                 </a>
             </div>

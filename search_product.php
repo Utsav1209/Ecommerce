@@ -1,4 +1,4 @@
-<div class="row" ng-controller="SearchController">
+<div class="row" ng-controller="SearchPageController">
     <div class="col-md-10">
         <!-- Products -->
         <div class="row px-1">
@@ -12,7 +12,7 @@
                             <p class="card-title">Price: {{ product.product_price }}/-</p>
                             <a href="index.php?add_to_cart={{ product.product_id }}" class="btn btn-info">Add to Cart</a>
                             <a href="product_details.php?product_id={{ product.product_id }}" class="btn btn-success">View more</a>
-                            <a href="index.php" class="btn btn-secondary">Go Home</a>
+                            <a href="#!/home" class="btn btn-secondary">Go Home</a>
                         </div>
                     </div>
                 </div>

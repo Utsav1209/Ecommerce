@@ -1,4 +1,5 @@
-<div ng-app="ecommerceApp" ng-controller="BrandController">
+<?php include("./dashboard.php"); ?>
+<div ng-app="ecommerceApp" ng-controller="AdminController">
     <h3 class="text-center text-success">All Orders</h3>
     <table class="table table-bordered mt-5">
         <thead class="bg-info text-center">
@@ -20,7 +21,7 @@
                 <td>{{order.total_products}}</td>
                 <td>{{order.order_date}}</td>
                 <td>{{order.order_status}}</td>
-                <td><a href="#" ng-click="confirmDelete(order.order_id)"><i class='fa-solid fa-trash'></i></a></td>
+                <td><a href="#" ng-click="orderDelete(order.order_id)"><i class='fa-solid fa-trash'></i></a></td>
             </tr>
         </tbody>
     </table>
