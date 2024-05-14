@@ -29,6 +29,22 @@ session_start();
         body {
             overflow-x: hidden;
         }
+
+        .styled-div a {
+            display: block;
+            padding: 7px;
+            text-decoration: none;
+            transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .styled-div a:hover {
+            background-color: transparent;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            color: black;
+        }
     </style>
 </head>
 
@@ -133,7 +149,7 @@ session_start();
                                     <h4>Delivery Brands</h4>
                                 </a>
                             </li>
-                            <div ng-repeat="brand in Bnames">
+                            <div ng-repeat="brand in Bnames" class="styled-div">
                                 <a href="#!/brands/{{brand.brand_id}}">{{ brand.brand_name }}</a>
                             </div>
                         </ul>
@@ -147,7 +163,7 @@ session_start();
                                     <h4>Categories</h4>
                                 </a>
                             </li>
-                            <div ng-repeat="category in Cnames">
+                            <div ng-repeat="category in Cnames" class="styled-div">
                                 <a href="#!/category/{{category.category_id}}">{{ category.category_title }}</a>
                             </div>
                         </ul>

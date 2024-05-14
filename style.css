@@ -33,3 +33,22 @@
 
 }
 
+.styled-div ul {
+    margin-top: 20px;
+}
+
+.styled-div a {
+    display: block;
+    padding: 5px;
+}
+
+.styled-div a {
+    display: block;
+    padding: 5px;
+    text-decoration: none; /* Remove underline */
+    transition: transform 0.3s ease; /* Add animation */
+}
+
+.styled-div a:hover {
+    transform: scale(1.1); /* Increase size on hover */
+}

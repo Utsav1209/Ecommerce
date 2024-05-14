@@ -472,7 +472,7 @@ app.controller('BrandController', function ($scope, $http, $location) {
 
 
     $scope.getPendingOrders = function () {
-        $http.get('userProfile.php')
+        $http.get('users_area/userProfile.php')
             .then(function (response) {
                 if (response.data.hasOwnProperty('pendingOrders')) {
                     $scope.pendingOrders = parseInt(response.data.pendingOrders);
@@ -937,7 +937,7 @@ app.controller('AdminController', function ($scope, $http, $location) {
     };
 
     $scope.fetchProducts = function () {
-        $http.get('fetchProducts.php')
+        $http.get('admin_area/fetchProducts.php')
             .then(function (response) {
                 $scope.products = response.data;
             })
