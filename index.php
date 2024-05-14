@@ -81,7 +81,7 @@ session_start();
                             <a class="nav-link" href="#!/cart"><i class="fa-solid fa-cart-shopping"></i><sup><?php cart_item(); ?></sup></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Total Price:<?php total_cart_price(); ?>/-</a>
+                            <a class="nav-link" href="#" style="pointer-events: none;">Total Price:<?php total_cart_price(); ?>/-</a>
                         </li>
                     </ul>
                     <!-- <form class="d-flex" ng-submit="searchProduct()" ng-controller="SearchController">
@@ -106,11 +106,11 @@ session_start();
                 <?php
                 if (!isset($_SESSION['username'])) {
                     echo "  <li class='nav-item'>
-                    <a class='nav-link' href='#'>Welcome Guest</a>
+                    <a class='nav-link' href='#' style='pointer-events: none;'>Welcome Guest</a>
                 </li>";
                 } else {
                     echo "<li class='nav-item'>
-                    <a class='nav-link' href='#'>Welcome " . $_SESSION['username'] . "</a>
+                    <a class='nav-link' href='#' style='pointer-events: none;'>Welcome " . $_SESSION['username'] . "</a>
                 </li>";
                 }
                 if (!isset($_SESSION['username'])) {
